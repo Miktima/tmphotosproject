@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Tima Photos</title>
+</head>
+<body>
+		{% for photo in photo_list %}
+		<div>{{photo}}</div>
+		{% endfor %}
+	<a href="{% url 'upload_photo' %}">Add new photo</a>
+</body>
+</html>
