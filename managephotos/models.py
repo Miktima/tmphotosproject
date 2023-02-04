@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import date
 
 class Genre_en(models.Model):
 	genre = models.CharField(max_length=50, help_text='Genre of a photo')
@@ -17,9 +18,11 @@ class Title_en(models.Model):
 		return self.title	
 	
 class Src(models.Model):
-	src = models.CharField(max_length=200, help_text='The path to the photo')
+	td = date.today()
+	upload_path = "photo/" + td.strftime("%Y/%m/%d/")
+	src = models.ImageField(upload_to=upload_path, help_text='The path to the photo')
 	url = models.URLField(help_text='Friendly URL of the photo')
-	src_min = models.CharField(max_length=200, help_text='The path to the thumbnail')
+	src_min = models.ImageField(upload_to=upload_path, help_text='The path to the thumbnail')
 	url_min = models.URLField(help_text='Friendly URL to the thumbnail')
 
 class Photo(models.Model):

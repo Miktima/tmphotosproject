@@ -1,1 +1,3 @@
 /manage.py
+managephotos/__pycache__/
+managephotos/migrations/

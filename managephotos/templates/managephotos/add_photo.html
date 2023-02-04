@@ -8,6 +8,7 @@
 </head>
 <body>
 	<form action="" method="post">
+		{% csrf_token %}  
 		Title: <input type="text" name="photo_title" size="120"> Place: <input type="text" name="photo_title" size="80">
 		Keywords: <textarea name="keywords" cols="200" rows="3"></textarea>
 		Genre: <select name="genre" multiple size="3">
