@@ -4,4 +4,4 @@ from .models import Src
 class UploadImageForm(ModelForm):
 	class Meta:
 		model = Src
-		fields = ["src"]
+		fields = ["src", "src_min"]

@@ -17,6 +17,19 @@
 	<form action="{% url 'add_photo' %}" method="post" enctype="multipart/form-data">
 		{% csrf_token %}  
 		<table>{{upload_form}}</table>
+		<div>
+		Title: <input type="text" name="photo_title" size="80"> 
+		<br>
+		Place: <input type="text" name="photo_title" size="40">
+		<br>
+		Keywords: <textarea name="keywords" cols="120" rows="3"></textarea>
+		<br>
+		Genre: <select name="genre" multiple size="3">
+			{% for genre in genre_list %}
+				<option value="{{genre.pk}}">{{genre.genre}}</option>
+			{% endfor %}
+		</select>
+		</div>
 		<input type="submit" value="Submit">
 	</form>
 </body>

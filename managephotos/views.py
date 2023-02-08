@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from .forms import UploadImageForm
-from .models import Genre_en, Photo
+from .models import Genre_en, Photo, Src
 from django.contrib import messages
+from django.urls import reverse
 
 def index(request):
 	list_photo = Photo.objects.all()
@@ -23,7 +24,11 @@ def add_photo(request):
 		form = UploadImageForm(request.POST, request.FILES)
 		if form.is_valid():
 			form.save()
-			return render(request, 'managephotos/index.html')
+			src_last = Src.objects.last()
+			context = {
+				"src_photo": src_last.src_min
+			}
+			return redirect(reverse("index"))
 		else:
 			messages.add_message(request, messages.ERROR, form.errors)
 			upload_form = UploadImageForm()

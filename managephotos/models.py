@@ -29,8 +29,11 @@ class Photo(models.Model):
 	src = models.ForeignKey(Src, on_delete=models.CASCADE)
 	star = models.PositiveSmallIntegerField(help_text='The rank (priority) of the photo')
 	title = models.ForeignKey(Title_en, on_delete=models.CASCADE)
-	genre = models.ForeignKey(Genre_en, on_delete=models.DO_NOTHING)
 
 class Photo_keyword(models.Model):
 	photo = models.ForeignKey(Photo, on_delete=models.CASCADE)
 	keyword = models.ForeignKey(Keywords_en, on_delete=models.CASCADE)
+
+class Photo_genre(models.Model):
+	photo = models.ForeignKey(Photo, on_delete=models.CASCADE)
+	genre = models.ForeignKey(Genre_en, on_delete=models.DO_NOTHING)
