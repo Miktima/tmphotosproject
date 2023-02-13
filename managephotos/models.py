@@ -13,7 +13,7 @@ class Keywords_en(models.Model):
 
 class Title_en(models.Model):
 	title = models.CharField(max_length=200)
-	place = models.CharField(max_length=100)
+	place = models.CharField(max_length=100, required=False)
 	def __str___(self):
 		return self.title	
 	
@@ -21,9 +21,9 @@ class Src(models.Model):
 	td = date.today()
 	upload_path = "photo/" + td.strftime("%Y/%m/%d/")
 	src = models.ImageField(upload_to=upload_path, help_text='The path to the photo')
-	url = models.URLField(help_text='Friendly URL of the photo')
+	url = models.URLField(help_text='Friendly URL of the photo', required=False)
 	src_min = models.ImageField(upload_to=upload_path, help_text='The path to the thumbnail')
-	url_min = models.URLField(help_text='Friendly URL to the thumbnail')
+	url_min = models.URLField(help_text='Friendly URL to the thumbnail', required=False)
 
 class Photo(models.Model):
 	src = models.ForeignKey(Src, on_delete=models.CASCADE)

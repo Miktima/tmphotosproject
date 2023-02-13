@@ -1,9 +1,4 @@
-/manage.py
 managephotos/__pycache__/
-managephotos/migrations/
-tmphotosproject/wsgi.py
 tmphotosproject/settings.py
-tmphotosproject/asgi.py
-tmphotosproject/__init__.py
 tmphotosproject/__pycache__/
 photo/

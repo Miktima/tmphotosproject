@@ -20,13 +20,20 @@
 		<div>
 		Title: <input type="text" name="photo_title" size="80"> 
 		<br>
-		Place: <input type="text" name="photo_title" size="40">
+		Place: <input type="text" name="photo_place" size="40">
 		<br>
 		Keywords: <textarea name="keywords" cols="120" rows="3"></textarea>
 		<br>
-		Genre: <select name="genre" multiple size="3">
+		Genre: <select name="genre" multiple size="2">
 			{% for genre in genre_list %}
 				<option value="{{genre.pk}}">{{genre.genre}}</option>
+			{% endfor %}
+		</select>
+		Stars: <select name="stars">
+			{% for star in star_list %}
+				<option value="{{star}}" {% if star == 3 %} selected {% endif %}>
+					{{star}}
+				</option>
 			{% endfor %}
 		</select>
 		</div>
