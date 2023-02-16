@@ -4,9 +4,10 @@ class MpClass:
         self.lenFriendlyUrl = 30
 
     def convertUrl(self, src:str, title:str):
+        photoname = src[src.rfind("/"):(len(src)-1)]
         if len(title) <= self.lenFriendlyUrl:
             suburl = title.replace(" ", "_")
-            return suburl + src
+            return suburl + photoname
         else:
             # Убираем артиклы, если они есть в начале
             title = title.replace("The ", "", 1)
@@ -20,4 +21,4 @@ class MpClass:
                 if suburl_len > self.lenFriendlyUrl:
                     break
                 suburl += iword + "_"
-            return suburl + src
+            return suburl + photoname

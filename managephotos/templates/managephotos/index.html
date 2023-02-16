@@ -7,9 +7,19 @@
     <title>Tima Photos</title>
 </head>
 <body>
-		{% for photo in photo_list %}
-		<div>{{photo}}</div>
+    {% if photo_list %}
+        <table>
+        <tr>
+            <th>Thumbnail</th><th>title</th><th>stars</th><th>edit</th><th>remove</th>
+        </tr>
+	    {% for photo in photo_list %}
+        <tr>
+		<td><img src="../media/{{photo.1}}"></td><td>{{photo.2}}</td><td>{{photo.3}}</td>
+        <td>edit - {{photo.0}}</td><td>remove - {{photo.0}}</td>
+        </tr>
 		{% endfor %}
+        </table>
+    {% endif %}
 	<a href="{% url 'upload_photo' %}">Add new photo</a>
 </body>
 </html>
