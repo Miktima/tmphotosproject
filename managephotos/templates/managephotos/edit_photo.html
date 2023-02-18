@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Tima Photos</title>
+</head>
+<body>
+	{% if messages %}
+	<div class="messages">
+		{% for message in messages %}
+		<span{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</span>
+		{% endfor %}
+	</div>
+	{% endif %}	
+	<form action="{% url 'add_photo' %}" method="post" enctype="multipart/form-data">
+		{% csrf_token %}
+		<table>
+			<tr>
+				<td><img src="{{src_min}}" height="{{photo_height}}" width="{{photo_width}}"></td>
+				<td><img src="{{src}}" height="photo_height" width="photo_width"></td>
+			</tr>
+			<tr>
+				<td>Title: <input type="text" name="photo_title" size="80" value="{{title}}"></td>
+				<td>Place: <input type="text" name="photo_place" size="40" value="{{place}}"></td>
+			</tr>
+		<br>
+		Keywords: <textarea name="keywords" cols="120" rows="3"></textarea>
+		<br>
+		Genre: <select name="genre" multiple size="2">
+			{% for genre in genre_list %}
+				<option value="{{genre.pk}}">{{genre.genre}}</option>
+			{% endfor %}
+		</select>
+		Stars: <select name="stars">
+			{% for star in star_list %}
+				<option value="{{star}}" {% if star == 3 %} selected {% endif %}>
+					{{star}}
+				</option>
+			{% endfor %}
+		</select>
+		</div>
+		<input type="submit" value="Submit">
+	</form>
+</body>
+</html>

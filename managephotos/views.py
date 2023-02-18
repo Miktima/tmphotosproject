@@ -85,6 +85,46 @@ def add_photo(request):
 		return render(request, 'managephotos/upload_photo.html',\
 			{'upload_form': upload_form})
 	
+def edit_photo(request, photo_id):
+	genre_list = Genre_en.objects.all()
+	star_list = []
+	for i in range(1, 6):
+		star_list.append(i)
+	photo_row = Photo.objects.get(id=photo_id)
+	photo_star = photo_row.star
+	title_row = Title_en.objects.get(photo__id=photo_id)
+	title = title_row.title
+	place = title_row.place
+	src_row = Src.objects.get(photo__id=photo_id)
+	src = src_row.src
+	src_min = src_row.src_min
+	photo_height = src_row.src_min.height
+	photo_width = src_row.src_min.width
+	photo_genre_row = Photo_genre.objects.filter(photo__id=photo_id).values()
+	photo_keywords_row = Photo_keyword.objects.filter(photo__id=photo_id).values()
+	context = {
+		"genre_list": genre_list,
+		"star_list": star_list,
+		"photo_star": photo_star,
+		"title": title,
+		"place": place,
+		"src": src,
+		"src_min": src_min,
+		"photo_height": photo_height,
+		"photo_width": photo_width
+	}
+	return render(request, 'managephotos/edit_photo.html', context=context)
 
-
+def remove_photo(request, photo_id):
+	upload_form = UploadImageForm()
+	genre_list = Genre_en.objects.all()
+	star_list = []
+	for i in range(1, 6):
+		star_list.append(i)
+	context = {
+		'upload_form': upload_form,
+		"genre_list": genre_list,
+		"star_list": star_list
+	}
+	return render(request, 'managephotos/upload_photo.html', context=context)
 

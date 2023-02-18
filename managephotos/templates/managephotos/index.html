@@ -15,7 +15,8 @@
 	    {% for photo in photo_list %}
         <tr>
 		<td><img src="../media/{{photo.1}}"></td><td>{{photo.2}}</td><td>{{photo.3}}</td>
-        <td>edit - {{photo.0}}</td><td>remove - {{photo.0}}</td>
+        <td><a href="{% url 'edit_photo' photo.0 %}">edit</a></td>
+        <td><a href="{% url 'remove_photo' photo.0 %}">remove</a></td>
         </tr>
 		{% endfor %}
         </table>
