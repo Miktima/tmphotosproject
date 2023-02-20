@@ -100,8 +100,9 @@ def edit_photo(request, photo_id):
 	src_min = src_row.src_min
 	photo_height = src_row.src_min.height
 	photo_width = src_row.src_min.width
-	photo_genre_row = Photo_genre.objects.filter(photo__id=photo_id).values()
-	photo_keywords_row = Photo_keyword.objects.filter(photo__id=photo_id).values()
+	photo_genre_row = list(Photo_genre.objects.filter(photo__id=photo_id).values_list("genre", flat=True))
+	photo_keywords_row = Photo_keyword.objects.filter(photo__id=photo_id).\
+		values("keyword__id", "keyword__keyword")
 	context = {
 		"genre_list": genre_list,
 		"star_list": star_list,
@@ -111,7 +112,9 @@ def edit_photo(request, photo_id):
 		"src": src,
 		"src_min": src_min,
 		"photo_height": photo_height,
-		"photo_width": photo_width
+		"photo_width": photo_width,
+		"photo_genre_row": photo_genre_row,
+		"photo_keywords_row": photo_keywords_row
 	}
 	return render(request, 'managephotos/edit_photo.html', context=context)
 
