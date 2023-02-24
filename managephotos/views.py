@@ -54,7 +54,7 @@ def add_photo(request):
 			src_row.url = f_url
 			src_row.url_min = f_url_min
 			src_row.save()
-			# Разделяем ключемые слова, очищаем от пробелов и записываем в 
+			# Разделяем ключевые слова, очищаем от пробелов и записываем в 
 			# таблицу ключевых слов, а потом и в таблицу связей с фото
 			# Если такое ключевое слово уже есть, то сразу записываем в 
 			# таблицу связей с фото
@@ -114,9 +114,72 @@ def edit_photo(request, photo_id):
 		"photo_height": photo_height,
 		"photo_width": photo_width,
 		"photo_genre_row": photo_genre_row,
-		"photo_keywords_row": photo_keywords_row
+		"photo_keywords_row": photo_keywords_row,
+		"photo_id": photo_id
 	}
 	return render(request, 'managephotos/edit_photo.html', context=context)
+
+def fixedit_photo(request):
+	if request.method == 'POST':
+		# Берем из БД значения для проверки их изменения
+		photo_id = request.POST["photo_id"]
+		photo_row = Photo.objects.get(id=photo_id)
+		photo_star = photo_row.star
+		title_row = Title_en.objects.get(photo__id=photo_id)
+		title = title_row.title
+		place = title_row.place
+		photo_genre_row = Photo_genre.objects.filter(photo__id=photo_id)
+		photo_keywords_row = Photo_keyword.objects.filter(photo__id=photo_id)
+		# Проверяем, изменились ли заголовок и/или место, звезды и если изменились, меняем их в БД
+		if title != request.POST["photo_title"]:
+			Title_en.objects.filter(photo__id=photo_id).update(title=request.POST["photo_title"])
+		if place != request.POST["photo_place"]:
+			Title_en.objects.filter(photo__id=photo_id).update(title=request.POST["photo_place"])
+		if photo_star != int(request.POST["stars"]):
+			Photo.objects.filter(id=photo_id).update(star=int(request.POST["stars"]))
+		# Проверяем, есть ли ключевые слова на удаление. Если есть, удаляем их из индексной таблицы
+		# Если ключевое слово не связано с другими фото, то удаляем его из основной таблицы
+		# Примечание: возвращаются в форме только чекнутые чекбоксы
+		photo_keywords_row = Photo_keyword.objects.filter(photo__id=photo_id).values_list("keyword__id", flat=True)
+		for k in photo_keywords_row:
+			index = "kw-" + str(k)
+			if index in request.POST:
+				Photo_keyword.objects.filter(photo__id=photo_id, keyword__id=k).delete()
+				if Photo_keyword.objects.filter(keyword__id=k).count() == 0:
+					Keywords_en.objects.filter(id=k).delete()					
+		# Проверяем, есть ли добавленные ключевые слова.
+		# Если есть, разделяем ключемые слова, очищаем от пробелов и записываем в 
+		# таблицу ключевых слов, а потом и в таблицу связей с фото
+		# Если такое ключевое слово уже есть, то сразу записываем в 
+		# таблицу связей с фото
+		keywords = request.POST["add_keywords"]
+		if keywords != "":
+			keywords_list = keywords.split(",")
+			for kword in keywords_list:
+				kw = kword.strip()
+				kw_exist = Keywords_en.objects.filter(keyword = kw)
+				if kw_exist.exists():
+					kw_link = Photo_keyword(photo=photo_row, keyword=kw_exist)
+				else:
+					keywords_row = Keywords_en(keyword = kw)
+					keywords_row.save()
+					kw_link = Photo_keyword(photo=photo_row, keyword=keywords_row)
+				kw_link.save()
+		# Проверяем жанры из формы записаны в индексе БД или нет. Если нет, записываем
+		genre_list = Photo_genre.objects.filter(photo__id=photo_id).values_list("genre__id", flat=True)
+		for g in request.POST["genre"]:
+			if g not in genre_list:
+				genre_row = Genre_en.objects.get(id = g)
+				ph_genre = Photo_genre(photo=photo_row, genre=genre_row)
+				ph_genre.save()
+		# Если нет жанра из индекса БД в форме, то удаляем его из индекса
+		for gbd in genre_list:
+			if gbd not in request.POST["genre"]:
+				Photo_genre.objects.filter(photo__id=photo_id, genre__id=gbd).delete()
+		return redirect(reverse("index"))
+	else:
+		messages.add_message(request, messages.ERROR, "Обрабатывается метод POST")
+		return redirect(reverse("index"))
 
 def remove_photo(request, photo_id):
 	upload_form = UploadImageForm()

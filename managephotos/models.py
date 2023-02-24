@@ -32,7 +32,7 @@ class Photo(models.Model):
 
 class Photo_keyword(models.Model):
 	photo = models.ForeignKey(Photo, on_delete=models.CASCADE)
-	keyword = models.ForeignKey(Keywords_en, on_delete=models.CASCADE)
+	keyword = models.ForeignKey(Keywords_en, on_delete=models.DO_NOTHING)
 
 class Photo_genre(models.Model):
 	photo = models.ForeignKey(Photo, on_delete=models.CASCADE)

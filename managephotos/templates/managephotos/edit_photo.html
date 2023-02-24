@@ -14,8 +14,9 @@
 		{% endfor %}
 	</div>
 	{% endif %}	
-	<form action="{% url 'add_photo' %}" method="post">
+	<form action="{% url 'fixedit_photo' %}" method="post">
 		{% csrf_token %}
+		<input type="hidden" name="id_photo_edit" value="{{photo_id}}">
 		<table>
 			<tr>
 				<td>Thumbnail</td><td>Hi resolution</td>
@@ -32,7 +33,7 @@
 				<td colspan="2">
 					Keywords:
 					{% for kw in photo_keywords_row %}
-						<span>{{kw.keyword__keyword}}<input name="kw-{{kw.keyword__id}}" type="checkbox"></span>
+						<span>{{kw.keyword__keyword}}<input name="kw-{{kw.keyword__id}}" value="{{kw.keyword__keyword}}" type="checkbox"></span>
 					{% endfor %}
 					<div>
 						<textarea name="add_keywords" cols="50" rows="1"></textarea>
@@ -41,7 +42,7 @@
 			</tr>
 			<tr>
 				<td>
-					Genre: {{photo_genre_row}}<select name="genre" multiple size="2">
+					Genre: <select name="genre" multiple size="2">
 						{% for genre in genre_list %}
 							<option value="{{genre.pk}}" {% if genre.id in photo_genre_row %} selected {% endif %}>{{genre.genre}}</option>
 						{% endfor %}
