@@ -12,13 +12,16 @@ class MpClass:
             # Убираем артиклы, если они есть в начале
             title = title.replace("The ", "", 1)
             title = title.replace("A ", "", 1)
-            words = title.split
+            words = title.split()
             suburl = ""
             suburl_len = 0
             # Заполняем целыми словами
             for iword in words:
-                suburl_len = len(iword) + 1
+                suburl_len += len(iword) + 1
                 if suburl_len > self.lenFriendlyUrl:
                     break
-                suburl += iword + "_"
+                if suburl == "":
+                    suburl += iword
+                else:
+                    suburl += "_" + iword
             return suburl + photoname

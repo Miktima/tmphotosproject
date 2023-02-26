@@ -48,8 +48,8 @@ def add_photo(request):
 			photo_row.save()
 			mptool = MpClass()
 			# Создаем ЧПУ для фото и эскиза
-			f_url = mptool.convertUrl(str(src_row.src), title)
-			f_url_min = mptool.convertUrl(str(src_row.src_min), title)
+			f_url = mptool.convertUrl(str(src_row.src.url), title)
+			f_url_min = mptool.convertUrl(str(src_row.src_min.url), title)
 			# Обновляем таблицу SRC
 			src_row.url = f_url
 			src_row.url_min = f_url_min
