@@ -70,7 +70,7 @@ def add_photo(request):
 					keywords_row.save()
 					kw_link = Photo_keyword(photo=photo_row, keyword=keywords_row)
 				kw_link.save()
-			for g in request.POST["genre"]:
+			for g in request.POST.getlist("genre"):
 				genre_row = Genre_en.objects.get(id = g)
 				ph_genre = Photo_genre(photo=photo_row, genre=genre_row)
 				ph_genre.save()
@@ -122,19 +122,18 @@ def edit_photo(request, photo_id):
 def fixedit_photo(request):
 	if request.method == 'POST':
 		# Берем из БД значения для проверки их изменения
-		photo_id = request.POST["photo_id"]
+		photo_id = request.POST["id_photo_edit"]
 		photo_row = Photo.objects.get(id=photo_id)
 		photo_star = photo_row.star
 		title_row = Title_en.objects.get(photo__id=photo_id)
 		title = title_row.title
 		place = title_row.place
-		photo_genre_row = Photo_genre.objects.filter(photo__id=photo_id)
 		photo_keywords_row = Photo_keyword.objects.filter(photo__id=photo_id)
 		# Проверяем, изменились ли заголовок и/или место, звезды и если изменились, меняем их в БД
 		if title != request.POST["photo_title"]:
 			Title_en.objects.filter(photo__id=photo_id).update(title=request.POST["photo_title"])
 		if place != request.POST["photo_place"]:
-			Title_en.objects.filter(photo__id=photo_id).update(title=request.POST["photo_place"])
+			Title_en.objects.filter(photo__id=photo_id).update(place=request.POST["photo_place"])
 		if photo_star != int(request.POST["stars"]):
 			Photo.objects.filter(id=photo_id).update(star=int(request.POST["stars"]))
 		# Проверяем, есть ли ключевые слова на удаление. Если есть, удаляем их из индексной таблицы
@@ -166,16 +165,19 @@ def fixedit_photo(request):
 					kw_link = Photo_keyword(photo=photo_row, keyword=keywords_row)
 				kw_link.save()
 		# Проверяем жанры из формы записаны в индексе БД или нет. Если нет, записываем
-		genre_list = Photo_genre.objects.filter(photo__id=photo_id).values_list("genre__id", flat=True)
-		for g in request.POST["genre"]:
-			if g not in genre_list:
+		# При этом убираем из списка в индексе жанры из формы.
+		# Оставшийся жанр удаляем из индекса
+		genre_list = list(Photo_genre.objects.filter(photo__id=photo_id).values_list("genre__id", flat=True))
+		for g in request.POST.getlist("genre"):
+			if genre_list.count(int(g)) == 0:
 				genre_row = Genre_en.objects.get(id = g)
 				ph_genre = Photo_genre(photo=photo_row, genre=genre_row)
 				ph_genre.save()
-		# Если нет жанра из индекса БД в форме, то удаляем его из индекса
+			else:
+				genre_list.remove(int(g))
+		# В списке жанры, которые надо удалить из индекса
 		for gbd in genre_list:
-			if gbd not in request.POST["genre"]:
-				Photo_genre.objects.filter(photo__id=photo_id, genre__id=gbd).delete()
+			Photo_genre.objects.filter(photo__id=photo_id, genre__id=gbd).delete()
 		return redirect(reverse("index"))
 	else:
 		messages.add_message(request, messages.ERROR, "Обрабатывается метод POST")
