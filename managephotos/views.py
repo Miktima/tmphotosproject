@@ -5,6 +5,7 @@ from .models import Genre_en, Photo, Title_en, Src, Keywords_en, Photo_keyword, 
 from django.contrib import messages
 from django.urls import reverse
 from .MpClass import MpClass
+import os
 
 def index(request):
 	photo = Photo.objects.all()
@@ -64,7 +65,7 @@ def add_photo(request):
 				kw = kword.strip()
 				kw_exist = Keywords_en.objects.filter(keyword = kw)
 				if kw_exist.exists():
-					kw_link = Photo_keyword(photo=photo_row, keyword=kw_exist)
+					kw_link = Photo_keyword(photo=photo_row, keyword=kw_exist.get())
 				else:
 					keywords_row = Keywords_en(keyword = kw)
 					keywords_row.save()
@@ -184,15 +185,29 @@ def fixedit_photo(request):
 		return redirect(reverse("index"))
 
 def remove_photo(request, photo_id):
-	upload_form = UploadImageForm()
-	genre_list = Genre_en.objects.all()
-	star_list = []
-	for i in range(1, 6):
-		star_list.append(i)
-	context = {
-		'upload_form': upload_form,
-		"genre_list": genre_list,
-		"star_list": star_list
-	}
-	return render(request, 'managephotos/upload_photo.html', context=context)
+	# Берем значение записи из таблицы photo
+	photo_row = Photo.objects.get(id=photo_id)
+	# Находим соответствующую запись в таблице Src
+	src_row = Src.objects.filter(photo__id__exact=photo_id).get()
+	# ID объекта Src для удаления
+	id_src = src_row.id
+	# Удаляем файлы 
+	os.remove(src_row.src.path)
+	os.remove(src_row.src_min.path)
+	# Находим привязанный к фотографии заголовок
+	title_row = Title_en.objects.filter(photo__id__exact=photo_id).get()
+	id_title = title_row.id
+	# Составляем список ключевых слов, привязанных к фотографии
+	kw_list = Photo_keyword.objects.filter(photo = photo_row).values_list("keyword", flat=True)
+	# Удаляем заголовок
+	Title_en.objects.filter(id=id_title).delete()
+	# Удаляем запись в таблице Src, одновременно удаляются связанные записи
+	# из таблиц Photo, Photo_keyword, Photo_genre
+	Src.objects.filter(id=id_src).delete()
+	# Находим ключевые слова, которых нет в индексе, и удаляем из таблицы ключевых слов
+	for kw in kw_list:
+		phk = Photo_keyword.objects.filter(keyword = kw)
+		if phk.exists() == False:
+			Keywords_en.objects.filter(id=kw).delete()
+	return redirect(reverse("index"))
 
