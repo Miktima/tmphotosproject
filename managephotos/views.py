@@ -6,6 +6,8 @@ from django.contrib import messages
 from django.urls import reverse
 from .MpClass import MpClass
 import os
+from django.contrib.auth.decorators import login_required
+@login_required
 
 def index(request):
 	photo = Photo.objects.all()
@@ -159,7 +161,7 @@ def fixedit_photo(request):
 				kw = kword.strip()
 				kw_exist = Keywords_en.objects.filter(keyword = kw)
 				if kw_exist.exists():
-					kw_link = Photo_keyword(photo=photo_row, keyword=kw_exist)
+					kw_link = Photo_keyword(photo=photo_row, keyword=kw_exist.get())
 				else:
 					keywords_row = Keywords_en(keyword = kw)
 					keywords_row.save()
