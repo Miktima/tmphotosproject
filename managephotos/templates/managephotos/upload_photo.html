@@ -16,27 +16,8 @@
 	{% endif %}	
 	<form action="{% url 'add_photo' %}" method="post" enctype="multipart/form-data">
 		{% csrf_token %}  
-		<table>{{upload_form}}</table>
-		<div>
-		Title: <input type="text" name="photo_title" size="80"> 
-		<br>
-		Place: <input type="text" name="photo_place" size="40">
-		<br>
-		Keywords: <textarea name="keywords" cols="120" rows="3"></textarea>
-		<br>
-		Genre: <select name="genre" multiple size="2">
-			{% for genre in genre_list %}
-				<option value="{{genre.pk}}">{{genre.genre}}</option>
-			{% endfor %}
-		</select>
-		Stars: <select name="stars">
-			{% for star in star_list %}
-				<option value="{{star}}" {% if star == 3 %} selected {% endif %}>
-					{{star}}
-				</option>
-			{% endfor %}
-		</select>
-		</div>
+		<table>{{photo_form.as_table}}</table>
+		<table>{{keywords_form.as_table}}</table>
 		<input type="submit" value="Submit">
 	</form>
 </body>
