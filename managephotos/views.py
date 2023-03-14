@@ -52,13 +52,8 @@ def add_photo(request):
 				photo_row = Photo.objects.last()
 				for kword in keywords_list:
 					kw = kword.strip()
-					kw_exist = Keywords.objects.filter(keyword = kw)
-					if kw_exist.exists() == False:
-						photo_row.keywords.add(kw_exist)
-					else:
-						keywords_row = Keywords(keyword = kw)
-						keywords_row.save()
-						photo_row.keywords.add(keywords_row)
+					kw_obj, created = Keywords.objects.get_or_create(keyword = kw)
+					photo_row.keywords.add(kw_obj)
 					photo_row.save()
 				return redirect(reverse("index"))
 			else:
@@ -91,16 +86,6 @@ def add_photo(request):
 	
 def edit_photo(request, photo_id):
 	photo_instance = get_object_or_404(Photo, pk=photo_id)
-	photoedit_form = PhotoEditForm(instance=photo_instance)
-	keywords_form = KeywordsForm()
-	context = {
-		"photoedit_form": photoedit_form,
-		"keywords_form": keywords_form
-	}
-	return render(request, 'managephotos/edit_photo.html', context=context)
-
-def fixedit_photo(request, photo_id):
-	photo_instance = get_object_or_404(Photo, pk=photo_id)
 	if request.method == 'POST':
 		form = PhotoEditForm(request.POST, request.FILES, instance=photo_instance)
 		if form.is_valid():
@@ -113,22 +98,18 @@ def fixedit_photo(request, photo_id):
 					photo_row = Photo.objects.last()
 					for kword in keywords_list:
 						kw = kword.strip()
-						kw_exist = Keywords.objects.filter(keyword = kw)
-						if kw_exist.exists() == False:
-							photo_row.keywords.add(kw_exist)
-						else:
-							keywords_row = Keywords(keyword = kw)
-							keywords_row.save()
-							photo_row.keywords.add(keywords_row)
-						photo_row.save()
-					return redirect(reverse("index"))
+					kw_obj, created = Keywords.objects.get_or_create(keyword = kw)
+					photo_row.keywords.add(kw_obj)
+					photo_row.save()
+				return redirect(reverse("index"))
 			else:
 				messages.add_message(request, messages.ERROR, form_keywords.errors)
 				photo_form = PhotoEditForm(instance=photo_instance)
 				keywords_form = KeywordsForm()
 				context = {
-					"photo_form": photo_form,
-					"keywords_form": keywords_form
+					"photo_form": photoedit_form,
+					"keywords_form": keywords_form,
+					"photo": photo_instance,
 				}				
 				return render(request, 'managephotos/edit_photo.html', context)
 		else:
@@ -136,18 +117,20 @@ def fixedit_photo(request, photo_id):
 			photo_form = PhotoEditForm(instance=photo_instance)
 			keywords_form = KeywordsForm()
 			context = {
-				"photo_form": photo_form,
-				"keywords_form": keywords_form
+				"photoedit_form": photo_form,
+				"keywords_form": keywords_form,
+				"photo": photo_instance,
 			}				
 			return render(request, 'managephotos/edit_photo.html', context)
 	else:
-		photo_form = PhotoForm()
+		photoedit_form = PhotoEditForm(instance=photo_instance)
 		keywords_form = KeywordsForm()
 		context = {
-			"photo_form": photo_form,
+			"photo": photo_instance,
+			"photoedit_form": photoedit_form,
 			"keywords_form": keywords_form
-		}				
-		return render(request, 'managephotos/edit_photo.html', context)
+		}
+		return render(request, 'managephotos/edit_photo.html', context=context)
 
 def remove_photo(request, photo_id):
 	# Берем значение записи из таблицы photo 

@@ -1,8 +1,7 @@
 from django import forms
 from .models import Photo
 import re
-from django.core.exceptions import ValidationError
-from django.utils.translation import gettext_lazy as _
+
 
 class PhotoForm(forms.ModelForm):
 	class Meta:
@@ -10,13 +9,14 @@ class PhotoForm(forms.ModelForm):
 		fields = ["src", "src_min", "star", "genre", "title", "place"]
 
 class KeywordsForm(forms.Form):
-	keywords = forms.CharField(help_text="comma separated keywords")
-
+	keywords = forms.CharField(max_length=250, help_text="comma separated keywords", 
+			    widget=forms.Textarea)
 	def clean_reywords(self):
 		data = self.cleaned_data["keywords"]
 		# Убираем все цифры и специальные символы кроме & (для black & white)
 		data = re.sub("[^a-zA-Z&,\s]", "", data)
 		return data
+
 class PhotoEditForm(forms.ModelForm):
 	class Meta:
 		model = Photo

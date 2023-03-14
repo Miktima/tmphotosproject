@@ -14,55 +14,11 @@
 		{% endfor %}
 	</div>
 	{% endif %}	
-	<form action="{% url 'fixedit_photo' %}" method="post">
+	<form action="{% url 'edit_photo' photo.id %}" method="post">
 		{% csrf_token %}
-		<input type="hidden" name="id_photo_edit" value="{{photo_id}}">
-		<table>
-			<tr>
-				<td>Thumbnail</td><td>Hi resolution</td>
-			</tr>
-			<tr>
-				<td><img src="{{src_min.url}}" height="{{photo_height}}" width="{{photo_width}}"></td>
-				<td><img src="{{src.url}}" height="{{photo_height}}" width="{{photo_width}}"></td>
-			</tr>
-			<tr>
-				<td>Title: <input type="text" name="photo_title" size="80" value="{{title}}"></td>
-				<td>Place: <input type="text" name="photo_place" size="40" value="{{place}}"></td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					Keywords:
-					{% for kw in photo_keywords_row %}
-						<span>{{kw.keyword__keyword}}<input name="kw-{{kw.keyword__id}}" value="{{kw.keyword__keyword}}" type="checkbox"></span>
-					{% endfor %}
-					<div>
-						<textarea name="add_keywords" cols="50" rows="1"></textarea>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					Genre: <select name="genre" multiple size="2">
-						{% for genre in genre_list %}
-							<option value="{{genre.pk}}" {% if genre.id in photo_genre_row %} selected {% endif %}>{{genre.genre}}</option>
-						{% endfor %}
-					</select>			
-				</td>
-				<td>
-					Stars: <select name="stars">
-						{% for star in star_list %}
-							<option value="{{star}}" {% if star == photo_star %} selected {% endif %}>
-								{{star}}
-							</option>
-						{% endfor %}
-					</select>			
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<input type="submit" value="Submit">					
-				</td>
-			</tr>
+		<table>{{photoedit_form.as_table}}</table>
+		<table>{{keywords_form.as_table}}</table>
+		<input type="submit" value="Submit">
 	</form>
 </body>
 </html>
