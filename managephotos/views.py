@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect
-from .forms import PhotoForm, KeywordsForm, PhotoEditForm
+from .forms import PhotoForm, KeywordsForm, PhotoEditForm, KeywordsEditForm
 from .models import Genre, Photo, Keywords
 from django.contrib import messages
 from django.urls import reverse
@@ -47,7 +47,7 @@ def add_photo(request):
 			# таблицу с фото
 			form_keywords = KeywordsForm(request.POST)
 			if form_keywords.is_valid():
-				keywords = form_keywords.cleaned_data["keywords"]
+				keywords = form_keywords.cleaned_data["keywords_bulk"]
 				keywords_list = keywords.split(",")
 				photo_row = Photo.objects.last()
 				for kword in keywords_list:
@@ -90,41 +90,41 @@ def edit_photo(request, photo_id):
 		form = PhotoEditForm(request.POST, request.FILES, instance=photo_instance)
 		if form.is_valid():
 			form.save()
-			form_keywords = KeywordsForm(request.POST)
+			form_keywords = KeywordsEditForm(request.POST)
 			if form_keywords.is_valid():
-				keywords = form_keywords.cleaned_data["keywords"]
+				keywords = form_keywords.cleaned_data["keywords_bulk"]
 				if keywords != "":
 					keywords_list = keywords.split(",")
 					photo_row = Photo.objects.last()
 					for kword in keywords_list:
 						kw = kword.strip()
-					kw_obj, created = Keywords.objects.get_or_create(keyword = kw)
-					photo_row.keywords.add(kw_obj)
-					photo_row.save()
+						kw_obj, created = Keywords.objects.get_or_create(keyword = kw)
+						photo_row.keywords.add(kw_obj)
+						photo_row.save()
 				return redirect(reverse("index"))
 			else:
 				messages.add_message(request, messages.ERROR, form_keywords.errors)
-				photo_form = PhotoEditForm(instance=photo_instance)
-				keywords_form = KeywordsForm()
+				photoedit_form = PhotoEditForm(instance=photo_instance)
+				keywords_form = KeywordsEditForm()
 				context = {
-					"photo_form": photoedit_form,
+					"photoedit_form": photoedit_form,
 					"keywords_form": keywords_form,
 					"photo": photo_instance,
 				}				
 				return render(request, 'managephotos/edit_photo.html', context)
 		else:
 			messages.add_message(request, messages.ERROR, form.errors)
-			photo_form = PhotoEditForm(instance=photo_instance)
-			keywords_form = KeywordsForm()
+			photoedit_form = PhotoEditForm(instance=photo_instance)
+			keywords_form = KeywordsEditForm()
 			context = {
-				"photoedit_form": photo_form,
+				"photoedit_form": photoedit_form,
 				"keywords_form": keywords_form,
 				"photo": photo_instance,
 			}				
 			return render(request, 'managephotos/edit_photo.html', context)
 	else:
 		photoedit_form = PhotoEditForm(instance=photo_instance)
-		keywords_form = KeywordsForm()
+		keywords_form = KeywordsEditForm()
 		context = {
 			"photo": photo_instance,
 			"photoedit_form": photoedit_form,
