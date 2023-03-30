@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect
 from .forms import PhotoForm, KeywordsForm, PhotoEditForm, KeywordsEditForm
 from .models import Genre, Photo, Keywords
 from django.contrib import messages
