@@ -11,8 +11,8 @@ class PhotoForm(forms.ModelForm):
 class KeywordsForm(forms.Form):
 	keywords_bulk = forms.CharField(max_length=250, help_text="comma separated keywords", 
 			    widget=forms.Textarea, label="Keywords")
-	def clean_reywords(self):
-		data = self.cleaned_data["keywords"]
+	def clean_keywords_bulk(self):
+		data = self.cleaned_data["keywords_bulk"]
 		# Убираем все цифры и специальные символы кроме & (для black & white)
 		data = re.sub("[^a-zA-Z&,\s]", "", data)
 		return data
@@ -20,8 +20,8 @@ class KeywordsForm(forms.Form):
 class KeywordsEditForm(forms.Form):
 	keywords_bulk = forms.CharField(max_length=250, help_text="comma separated keywords", 
 			    widget=forms.Textarea, label="Keywords", required=False)
-	def clean_reywords(self):
-		data = self.cleaned_data["keywords"]
+	def clean_keywords_bulk(self):
+		data = self.cleaned_data["keywords_bulk"]
 		# Убираем все цифры и специальные символы кроме & (для black & white)
 		data = re.sub("[^a-zA-Z&,\s]", "", data)
 		return data

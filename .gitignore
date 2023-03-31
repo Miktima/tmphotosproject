@@ -3,3 +3,5 @@ tmphotosproject/settings.py
 tmphotosproject/__pycache__/
 photo/
 test_files/
+managephotos/tests/__pycache__/
+
