@@ -7,12 +7,12 @@
     <title>Tima Photos</title>
 </head>
 <body>
-    {% if photo_list %}
+    {% if page_obj %}
         <table>
         <tr>
             <th>Thumbnail</th><th>title</th><th>stars</th><th>edit</th><th>remove</th>
         </tr>
-	    {% for photo in photo_list %}
+	    {% for photo in page_obj %}
         <tr>
 		<td><img src="{{photo.1.url}}"></td><td>{{photo.2}}</td><td>{{photo.3}}</td>
         <td><a href="{% url 'edit_photo' photo.0 %}">edit</a></td>
@@ -20,6 +20,23 @@
         </tr>
 		{% endfor %}
         </table>
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+        
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+        
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>        
     {% endif %}
 	<a href="{% url 'upload_photo' %}">Add new photo</a>
 </body>

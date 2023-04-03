@@ -4,6 +4,7 @@ from .models import Genre, Photo, Keywords
 from django.contrib import messages
 from django.urls import reverse
 from .MpClass import MpClass
+from django.core.paginator import Paginator
 import os
 from django.contrib.auth.decorators import login_required
 @login_required
@@ -13,10 +14,10 @@ def index(request):
 	photo_list = []
 	for p in photo:
 		photo_list.append([p.id, p.src_min, p.title, p.star])
-	context = {
-		"photo_list": photo_list,
-	}
-	return render(request, 'managephotos/index.html', context)	
+	paginator = Paginator(photo_list, 3) # Show 3 photos per page.
+	page_number = request.GET.get('page')
+	page_obj = paginator.get_page(page_number)	
+	return render(request, 'managephotos/index.html', {'page_obj': page_obj})	
 
 def upload_photo(request):
 	photo_form = PhotoForm()
