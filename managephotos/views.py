@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic.list import ListView
 from .forms import PhotoForm, KeywordsForm, PhotoEditForm, KeywordsEditForm
 from .models import Genre, Photo, Keywords
 from django.contrib import messages
@@ -7,17 +8,21 @@ from .MpClass import MpClass
 from django.core.paginator import Paginator
 import os
 from django.contrib.auth.decorators import login_required
-@login_required
+from django.utils.decorators import method_decorator
 
-def index(request):
-	photo = Photo.objects.all()
-	photo_list = []
-	for p in photo:
-		photo_list.append([p.id, p.src_min, p.title, p.star])
-	paginator = Paginator(photo_list, 3) # Show 3 photos per page.
-	page_number = request.GET.get('page')
-	page_obj = paginator.get_page(page_number)	
-	return render(request, 'managephotos/index.html', {'page_obj': page_obj})	
+@method_decorator(login_required, name='dispatch')
+class PhotoListView(ListView):
+	model = Photo
+	template_name = 'managephotos/index.html'
+	paginate_by = 3
+	# photo = Photo.objects.all()
+	# photo_list = []
+	# for p in photo:
+	# 	photo_list.append([p.id, p.src_min, p.title, p.star])
+	# paginator = Paginator(photo_list, 3) # Show 3 photos per page.
+	# page_number = request.GET.get('page')
+	# page_obj = paginator.get_page(page_number)	
+	# return render(request, 'managephotos/index.html', {'page_obj': page_obj})	
 
 def upload_photo(request):
 	photo_form = PhotoForm()

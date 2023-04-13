@@ -4,6 +4,7 @@ from django.core.files import File
 from django.urls import reverse
 import random
 import string
+from django.contrib.auth.models import User
 
 class ManagephotosIndexViewTests(TestCase):
     
@@ -43,13 +44,47 @@ class ManagephotosIndexViewTests(TestCase):
                 url_min = "Friendly_URL_" + str(i) + "_thumbnail/DSC_0503.jpg",
                 title = "Title with number " + str(i),
                 star = rnd_star,
-                place = "Place #" + + str(i)            
+                place = "Place #" + str(i)            
             )
             pp.genre.add(g_sel)
             pp.keywords.add(k1, k2)
 
-    def test_template(self):
+    def setUp(self):
+        # Add user
+        test_user = User.objects.create_user(username='testuser', password='1X!ISRUkw+tuK')
+        test_user.save()
+        
+    def test_guest_redirect(self):
+        # test redirect for unlogged user
         response = self.client.get(reverse('index'))
+        self.assertRedirects(response, '/managephotos/accounts/login/?next=/managephotos/')
+
+    def test_login(self):
+        # user login
+        login = self.client.login(username='testuser', password='1X!ISRUkw+tuK')
+        response = self.client.get(reverse('index'))
+        # test status code
         self.assertEqual(response.status_code, 200)
+        # test template
         self.assertTemplateUsed(response, 'managephotos/index.html')
         
+    def test_pagination_first(self):
+        # user login
+        login = self.client.login(username='testuser', password='1X!ISRUkw+tuK')
+        response = self.client.get(reverse('index'))
+        print (response.context)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('is_paginated' in response.context)
+        self.assertTrue(response.context['is_paginated'] == True)
+        # Pagination is set to 3 photos
+        self.assertEqual(len(response.context['page_obj']), 3)
+
+    def test_pagination_second(self):
+        # user login
+        login = self.client.login(username='testuser', password='1X!ISRUkw+tuK')
+        response = self.client.get(reverse('index')+'?page=2')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('is_paginated' in response.context)
+        self.assertTrue(response.context['is_paginated'] == True)
+        # 5 photos is available, so 2 photos are on the second page
+        self.assertEqual(len(response.context['page_obj']), 2)                

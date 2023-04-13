@@ -7,16 +7,17 @@
     <title>Tima Photos</title>
 </head>
 <body>
-    {% if page_obj %}
+    {% if photo_list %}
         <table>
         <tr>
             <th>Thumbnail</th><th>title</th><th>stars</th><th>edit</th><th>remove</th>
         </tr>
-	    {% for photo in page_obj %}
+	    {% for photo in photo_list %}
         <tr>
-		<td><img src="{{photo.1.url}}"></td><td>{{photo.2}}</td><td>{{photo.3}}</td>
-        <td><a href="{% url 'edit_photo' photo.0 %}">edit</a></td>
-        <td><a href="{% url 'remove_photo' photo.0 %}">remove</a></td>
+		<td><img src="{{photo.src_min.url}}"></td><td>{{photo.title}}</td>
+        <td>{{photo.star}}</td>
+        <td><a href="{% url 'edit_photo' photo.id %}">edit</a></td>
+        <td><a href="{% url 'remove_photo' photo.id %}">remove</a></td>
         </tr>
 		{% endfor %}
         </table>
