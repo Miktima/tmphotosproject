@@ -15,24 +15,8 @@ class PhotoListView(ListView):
 	model = Photo
 	template_name = 'managephotos/index.html'
 	paginate_by = 3
-	# photo = Photo.objects.all()
-	# photo_list = []
-	# for p in photo:
-	# 	photo_list.append([p.id, p.src_min, p.title, p.star])
-	# paginator = Paginator(photo_list, 3) # Show 3 photos per page.
-	# page_number = request.GET.get('page')
-	# page_obj = paginator.get_page(page_number)	
-	# return render(request, 'managephotos/index.html', {'page_obj': page_obj})	
 
-def upload_photo(request):
-	photo_form = PhotoForm()
-	keywords_form = KeywordsForm()
-	context = {
-		"photo_form": photo_form,
-		"keywords_form": keywords_form
-	}
-	return render(request, 'managephotos/upload_photo.html', context=context)
-
+@login_required
 def add_photo(request):
 	if request.method == 'POST':
 		form = PhotoForm(request.POST, request.FILES)
