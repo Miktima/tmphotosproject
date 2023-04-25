@@ -1,11 +1,12 @@
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 from managephotos.models import Genre, Keywords, Photo
 from django.core.files import File
 from django.urls import reverse
 import random
 import string
+import random
 from django.contrib.auth.models import User
-from managephotos import views
+from managephotos.MpClass import MpClass
 
 class ManagephotosIndexViewTests(TestCase):
     
@@ -112,7 +113,23 @@ class ManagephotosAddPhotoViewTests(TestCase):
         # Add user
         test_user = User.objects.create_user(username='testuser', password='1X!ISRUkw+tuK')
         test_user.save()
-        
+        # добавление полей
+        f = open("test_files/DSC_0503.jpg", 'rb')
+        image = File(f)
+        f_tn = open("test_files/DSC_0503_tn.jpg", 'rb')
+        image_tn = File(f_tn)
+        g_nature = Genre.objects.get(genre="Nature")
+        g_other = Genre.objects.get(genre="Other")
+        test_photo = Photo.objects.create(
+            src = image,
+            src_min = image_tn,
+            title = "This is a title",
+            star = 2,
+            place = "Place of the photo"            
+        )
+        test_photo.genre.add(g_nature, g_other)
+        random.seed()
+
     def test_guest_redirect(self):
         # test redirect for unlogged user
         response = self.client.get(reverse('add_photo'))
@@ -128,28 +145,46 @@ class ManagephotosAddPhotoViewTests(TestCase):
         # test template
         self.assertTemplateUsed(response, 'managephotos/upload_photo.html')
 
-    def test_base_form(self):
+    def test_friendly_urls(self):
+        # Проверка создания ЧПУ
         # user login
         login = self.client.login(username='testuser', password='1X!ISRUkw+tuK')        
-        f = open("test_files/DSC_0503.jpg", 'rb')
-        f_tn = open("test_files/DSC_0503_tn.jpg", 'rb')
-        genre_instace = Genre.objects.get(genre = "Nature")
-        response = self.client.post('/managephotos/add_photo/', {
-            'src': f,
-            'src_min': f_tn,
-            'star': 2,
-            'title': 'This is a title',
-            'genre': genre_instace
-        })
-        # print("src: ", response.context['src'])
-        # print("src_min: ", response.context['src_min'])
-        # print("star: ", response.context['star'])
-        # print("title: " , response.context['title'])
-        # print("genre: " , response.context['genre'])
-        # print("place: " , response.context['place'])
-        # print("url: " , response.context['url'])
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.resolver_match.func, views.add_photo)
-        print (response.json())
-        
+		# Получаем последнее записанное значение
+        photo_row = Photo.objects.last()
+        mptool = MpClass()
+		# Создаем ЧПУ для фото и эскиза
+        f_url = mptool.convertUrl(str(photo_row.src.url), str(photo_row.title))
+        f_url_min = mptool.convertUrl(str(photo_row.src_min.url), str(photo_row.title))
+        self.assertRegex(f_url, "^This_is_a_title_DSC_0503\w*.jpg$")
+        self.assertRegex(f_url_min, "^This_is_a_title_DSC_0503_tn\w*.jpg$")
+        test_list = []
+        # Заполняем список для формирования заголовка
+        for k in range(0, 7):
+            random_text = random.choices(string.ascii_letters, k=7)
+            testString = "".join(random_text)
+            test_list.append(testString)
+        f_url = mptool.convertUrl(str(photo_row.src.url), " ".join(test_list))
+        f_url_min = mptool.convertUrl(str(photo_row.src_min.url), " ".join(test_list))
+        result_str = test_list[0] + "_" + test_list[1] + "_" + test_list[2] + "_"
+        self.assertRegex(f_url, "^" + result_str + "DSC_0503\w*.jpg$")
+        self.assertRegex(f_url_min, "^" + result_str + "DSC_0503_tn\w*.jpg", f_url_min)        
+        # Заполняем список для формирования заголовка с артиклями
+        for k in range(0, 7):
+            random_text = random.choices(string.ascii_letters, k=7)
+            testString = "".join(random_text)
+            test_list.append(testString)
+        f_url = mptool.convertUrl(str(photo_row.src.url), "The " + " ".join(test_list))
+        f_url_min = mptool.convertUrl(str(photo_row.src_min.url), "A " + " ".join(test_list))
+        result_str = test_list[0] + "_" + test_list[1] + "_" + test_list[2] + "_"
+        self.assertRegex(f_url, "^" + result_str + "DSC_0503\w*.jpg$")
+        self.assertRegex(f_url_min, "^" + result_str + "DSC_0503_tn\w*.jpg", f_url_min)        
 
+    def test_keywords_parsing(self):
+        # Проверка разбора ключевых слов
+        # user login
+        login = self.client.login(username='testuser', password='1X!ISRUkw+tuK')
+        factory = RequestFactory()
+        # data = {
+        #     "src": image, 
+        #     "src_min" = image_tn, title = "This is a title", star = 2, place = "Place of the photo" }
+        request = factory.post(reverse('add_photo')) 
