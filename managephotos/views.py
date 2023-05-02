@@ -72,7 +72,7 @@ def add_photo(request):
 		}				
 		return render(request, 'managephotos/upload_photo.html', context)
 
-	
+@login_required	
 def edit_photo(request, photo_id):
 	photo_instance = get_object_or_404(Photo, pk=photo_id)
 	if request.method == 'POST':
@@ -121,6 +121,7 @@ def edit_photo(request, photo_id):
 		}
 		return render(request, 'managephotos/edit_photo.html', context=context)
 
+@login_required	
 def remove_photo(request, photo_id):
 	# Берем значение записи из таблицы photo 
 	photo_instance = get_object_or_404(Photo, pk=photo_id)
