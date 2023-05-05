@@ -15,6 +15,7 @@ class PhotoListView(ListView):
 	model = Photo
 	template_name = 'managephotos/index.html'
 	paginate_by = 3
+	ordering = ['-id']
 
 @login_required
 def add_photo(request):

@@ -32,10 +32,12 @@ class ManagephotosIndexViewTests(TestCase):
         image = File(f)
         f_tn = open("test_files/DSC_0503_tn.jpg", 'rb')
         image_tn = File(f_tn)
+        # Получаем первый номер индекса
+        first = Genre.objects.first()
         random.seed()
         for i in range(0, 5):
-            ngenre = random.randrange(1, len(genres)+1)        
-            g_sel = Genre.objects.get(id=ngenre)
+            ngenre = random.randrange(first.pk, first.pk + len(genres))   
+            g_sel = Genre.objects.get(pk=ngenre)
             random_text = random.choices(string.ascii_letters, k=7)
             k1 = Keywords.objects.create(keyword=random_text)
             random_text = random.choices(string.ascii_letters, k=7)
