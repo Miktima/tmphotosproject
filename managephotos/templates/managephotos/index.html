@@ -1,23 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Tima Photos</title>
-</head>
-<body>
+{% extends "managephotos/base.html" %}
+{% block main %}
     {% if photo_list %}
-        <table>
+        <table class="table">
         <tr>
-            <th>Thumbnail</th><th>title</th><th>stars</th><th>edit</th><th>remove</th>
+            <th>Thumbnail</th><th>Title</th><th>Stars</th><th>Edit</th><th>Remove</th>
         </tr>
 	    {% for photo in photo_list %}
         <tr>
 		<td><img src="{{photo.src_min.url}}"></td><td>{{photo.title}}</td>
         <td>{{photo.star}}</td>
-        <td><a href="{% url 'edit_photo' photo.id %}">edit</a></td>
-        <td><a href="{% url 'remove_photo' photo.id %}">remove</a></td>
+        <td><a class="btn btn-warning" href="{% url 'edit_photo' photo.id %}" role="button">EDIT</a></td>
+        <td><a class="btn btn-danger" href="{% url 'remove_photo' photo.id %}" role="button">REMOVE</a></td>
         </tr>
 		{% endfor %}
         </table>
@@ -39,6 +32,5 @@
             </div>
         {% endif %}        
     {% endif %}
-	<a href="{% url 'add_photo' %}">Add new photo</a>
-</body>
-</html>
+	<a class="btn btn-outline-primary href="{% url 'add_photo' %}" role="button">Add new photo</a>
+{% endblock %}
