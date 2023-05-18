@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Tima Photos</title>
-</head>
-<body>
+{% extends "managephotos/base.html" %}
+{% block main %}
+	<h2 class="text-secondary-emphasis">Add new photo</h2>
 	{% if messages %}
 	<div class="messages">
 		{% for message in messages %}
@@ -16,9 +10,8 @@
 	{% endif %}	
 	<form action="{% url 'add_photo' %}" method="post" enctype="multipart/form-data">
 		{% csrf_token %}  
-		<table>{{photo_form.as_table}}</table>
-		<table>{{keywords_form.as_table}}</table>
-		<input type="submit" value="Submit">
+		<table class="table">{{photo_form.as_table}}
+		{{keywords_form.as_table}}</table>
+		<input type="submit" value="Add new photo" class="btn btn-outline-primary">
 	</form>
-</body>
-</html>
+{% endblock %}

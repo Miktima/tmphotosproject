@@ -1,0 +1,9 @@
+#id_star > div {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0.5em;
+}
+.helptext {
+    font-size: 1em;
+    color: lightgray;
+}
