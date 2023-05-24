@@ -43,6 +43,15 @@ class PhotoEditForm(forms.ModelForm):
 		model = Photo
 		fields = ["src", "src_min", "url", "url_min", "star", "genre", 
 	    		"title", "place", "keywords"]
+		CHOICES = [('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'),]
+		labels = {
+			'src': 'The path to the hires photo',
+			'src_min': 'The path to the thumbnail',
+			"star": 'The rank (priority) of the photo',
+			'url': 'Friendly URL of the photo',
+			'url_min': 'Friendly URL to the thumbnail'
+		}
 		widgets = {
+			'star': forms.RadioSelect(choices=CHOICES),
 			"keywords": KeywordsCheckboxSelectMultiple
-		}			
+		}					

@@ -3,6 +3,13 @@
     vertical-align: middle;
     margin: 0.5em;
 }
+div#id_keywords {
+    width: 40em;
+}
+div#id_keywords > div {
+    display: inline-block;
+    margin: 0.5em;
+}
 .helptext {
     font-size: 1em;
     color: lightgray;

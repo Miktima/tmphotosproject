@@ -1,24 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Tima Photos</title>
-</head>
-<body>
+{% extends "managephotos/base.html" %}
+{% block main %}
+	<h2 class="text-secondary-emphasis">Edit photo</h2>
 	{% if messages %}
-	<div class="messages">
+	<div class="alert alert-warning" role="alert">
 		{% for message in messages %}
-		<span{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</span>
+		<div>{{ message }}</div>
 		{% endfor %}
 	</div>
 	{% endif %}	
 	<form action="{% url 'edit_photo' photo.id %}" method="post">
 		{% csrf_token %}
-		<table>{{photoedit_form.as_table}}</table>
-		<table>{{keywords_form.as_table}}</table>
-		<input type="submit" value="Submit">
+		<table class="table">{{photoedit_form.as_table}}
+		{{keywords_form.as_table}}</table>
+		<input type="submit" value="Save" class="btn btn-outline-primary">
 	</form>
-</body>
-</html>
+{% endblock %}
