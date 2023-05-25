@@ -1,3 +1,5 @@
+import re
+
 class MpClass:
     def __init__(self):
     # Максимальное число символов в url
@@ -7,6 +9,7 @@ class MpClass:
         photoname = src[src.rfind("/")+1:(len(src))]
         if len(title) <= self.lenFriendlyUrl:
             suburl = title.replace(" ", "_")
+            suburl = re.sub("\W", "", suburl)
             return suburl + "_" + photoname
         else:
             # Убираем артиклы, если они есть в начале
@@ -24,4 +27,5 @@ class MpClass:
                     suburl += iword
                 else:
                     suburl += "_" + iword
+            suburl = re.sub("\W", "", suburl)
             return suburl + "_" + photoname
