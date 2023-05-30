@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="The photo manager of TIMA PHOTOS">
+    <link href="{% static 'tmphotosproject/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'tmphotosproject/style.css' %}" rel="stylesheet">
+    <link rel="icon" href="{% static 'tmphotosproject/img/favicon.svg' %}" type="image/svg">
+    <title>{% block title %}TIMA PHOTOS{% endblock %}</title>
+</head>
+<body class="bg-light">
+    <div class="container">
+        {% block main %}{% endblock %}
+    </div>
+</body>
+</html>

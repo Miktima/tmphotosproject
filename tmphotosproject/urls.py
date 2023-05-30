@@ -6,6 +6,7 @@ from django.views.static import serve
 
 urlpatterns = [
     path('managephotos/', include('managephotos.urls')),
+    path('', include('gallery.urls')),
     path('admin/', admin.site.urls),
 ]
 
