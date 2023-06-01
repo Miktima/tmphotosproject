@@ -1,4 +1,15 @@
-{% extends "managephotos/base.html" %}
+{% extends "gallery/base.html" %}
 {% block title %}TIMA PHOTOS - Home{% endblock %}
-{% block main %}
+{% block menu %}
+<div class="list-group list-group-flush">
+    <a href="#" class="list-group-item">HOME</a>
+    <a href="#" class="list-group-item">GALLERY</a>
+    <div class="list-group list-group-flush">
+        {% for g in genre %}
+            <a href="#" class="list-group-item">{{g.genre}}</a>
+        {% endfor %}
+    </div>
+    <a href="#" class="list-group-item">STOCKS</a>
+</div>
 {% endblock %}
+{% block img %}img{% endblock %}
