@@ -1,7 +1,9 @@
 managephotos/__pycache__/
-tmphotosproject/settings.py
 tmphotosproject/__pycache__/
 photo/
 test_files/
 managephotos/tests/__pycache__/
 gallery/__pycache__/
+.gitsecret/keys/random_seed
+!*.secret
+tmphotosproject/settings.py
