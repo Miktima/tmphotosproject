@@ -1,4 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse
+from django.urls import reverse
 from managephotos.models import Genre, Photo
 import random
 
@@ -20,3 +22,9 @@ def home(request):
         "rnd_photo": photo_ch 
     }
     return render(request, 'gallery/index.html', context)
+
+def image_url(request, url):
+    # Берем значение записи из таблицы photo 
+    print("image_url: ", url)
+    photo_instance = get_object_or_404(Photo, url=url)
+    return HttpResponse(photo_instance.src)

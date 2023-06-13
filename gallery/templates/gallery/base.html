@@ -12,13 +12,13 @@
     <title>{% block title %}TIMA PHOTOS{% endblock %}</title>
 </head>
 <body class="bg-light">
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             <div class="col">
-                <h1>TIMA PHOTOS</h1>
+                <h3>TIMA PHOTOS</h3>
                 {% block menu %}{% endblock %}
             </div>
-            <div class="col-6">{% block img %}{% endblock %}</div>
+            <div class="col-10" class="mx-auto m-2">{% block img %}{% endblock %}</div>
         </div>
         {% block main %}{% endblock %}
     </div>

@@ -12,5 +12,5 @@
     <a href="#" class="list-group-item">STOCKS</a>
 </div>
 {% endblock %}
-{% block img %}<img src="{{MEDIA_URL}}{{rnd_photo.src}}"> {%endblock %}
+{% block img %}<img src="{% url 'image_url' rnd_photo.url %}" class="img-fluid" alt="{{rnd_photo.title}}"> {%endblock %}
 {% block main %}main{% endblock %}

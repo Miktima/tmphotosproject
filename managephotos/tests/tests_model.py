@@ -64,8 +64,8 @@ class ManagephotosModelTests(TestCase):
         pp = Photo.objects.create(
             src = image,
             src_min = image_tn,
-            url = "Friendly_URL_of_the_photo_test_files/DSC_0503.jpg",
-            url_min = "Friendly_URL_of_the_thumbnail_test_files/DSC_0503.jpg",
+            url = "Friendly_URL_of_the_photo_test_files_DSC_0503.jpg",
+            url_min = "Friendly_URL_of_the_thumbnail_test_files_DSC_0503.jpg",
             title = "Title with question? and!",
             star = 1,
             place = "Place of the photo"            
