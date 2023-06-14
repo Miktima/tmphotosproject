@@ -14,13 +14,13 @@
 <body class="bg-light">
     <div class="container-fluid">
         <div class="row">
-            <div class="col">
-                <h3>TIMA PHOTOS</h3>
+            <div class="col-2">
+                <h3 class="ms-2 my-2 title">TIMA PHOTOS</h3>
                 {% block menu %}{% endblock %}
+                <div class="card">{% block main %}{% endblock %}</div>
             </div>
-            <div class="col-10" class="mx-auto m-2">{% block img %}{% endblock %}</div>
-        </div>
-        {% block main %}{% endblock %}
+            <div class="col-10" class="mx-auto p-2">{% block img %}{% endblock %}</div>
+        </div>       
     </div>
 </body>
 </html>

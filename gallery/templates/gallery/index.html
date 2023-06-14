@@ -1,15 +1,14 @@
 {% extends "gallery/base.html" %}
 {% block title %}TIMA PHOTOS - Home{% endblock %}
 {% block menu %}
-<div class="list-group list-group-flush">
-    <a href="#" class="list-group-item">HOME</a>
-    <a href="#" class="list-group-item">GALLERY</a>
-    <div class="list-group list-group-flush">
-        {% for g in genre %}
-            <a href="#" class="list-group-item">{{g.genre}}</a>
-        {% endfor %}
-    </div>
-    <a href="#" class="list-group-item">STOCKS</a>
+<div class="list-group list-group">
+    <a href="{% url 'home' %}" class="list-group-item list-group-item-action list-group-item-light menu-active">HOME</a>
+    <a href="#" class="list-group-item list-group-item-action list-group-item-light">STOCKS</a>
+</div>
+<div class="list-group list-group">
+    {% for g in genre %}
+        <a href="#" class="list-group-item list-group-item-action list-group-item-light ps-5">{{g.genre}}</a>
+    {% endfor %}
 </div>
 {% endblock %}
 {% block img %}<img src="{% url 'image_url' rnd_photo.url %}" class="img-fluid" alt="{{rnd_photo.title}}"> {%endblock %}
