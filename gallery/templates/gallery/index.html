@@ -1,19 +1,19 @@
 {% extends "gallery/base.html" %}
 {% block title %}TIMA PHOTOS - Home{% endblock %}
 {% block menu %}
-<div class="list-group list-group-flush">
-    <a href="{% url 'home' %}" class="list-group-item list-group-item-action list-group-item-light menu-active">HOME</a>
-    <a href="#" class="list-group-item list-group-item-action list-group-item-light">STOCKS</a>
-</div>
-<div class="list-group list-group-flush my-3">
+<nav class="nav">
+    <a href="{% url 'home' %}" class="flex-lg-fill nav-link menu-active">HOME</a>
+    <a href="#" class="flex-lg-fill nav-link">STOCKS</a>
+</nav>
+<nav class="nav flex-column flex-lg-row mt-3 mb-5">
     {% for g in genre %}
-        <a href="#" class="list-group-item list-group-item-action list-group-item-light ps-5">{{g.genre}}</a>
+        <a href="#" class="flex-lg-fill nav-link ps-5">{{g.genre}}</a>
     {% endfor %}
-</div>
+</nav>
 {% endblock %}
 {% block main %}<div class="card-body">
-    <h5 class="card-title">{{rnd_photo.title}}</h5>
-{% if rnd_photo.place %}<h6 class="card-subtitle">{{rnd_photo.place}}</h6>{% endif %}
-<p class="card-text">{% for k in rnd_photo.keywords.all %}#{{k}}, {% endfor %}</p>
+    <h6 class="card-title title">{{rnd_photo.title}}
+{% if rnd_photo.place %} &#124; {{rnd_photo.place}}{% endif %}</h6>
+<p class="card-text helptext"><small>{% for k in rnd_photo.keywords.all %}#{{k}} </small>{% endfor %}</p>
 </div>{% endblock %}
-{% block img %}<img src="{% url 'image_url' rnd_photo.url %}" class="img-fluid" alt="{{rnd_photo.title}}"> {%endblock %}
+{% block img %}<img src="{% url 'image_url' rnd_photo.url %}" class="img-fluid rounded mx-auto d-block" alt="{{rnd_photo.title}}"> {%endblock %}
