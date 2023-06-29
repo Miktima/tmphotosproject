@@ -1,19 +1,20 @@
 {% extends "gallery/base.html" %}
 {% block title %}TIMA PHOTOS - Home{% endblock %}
 {% block menu %}
-<nav class="nav justify-content-center d-md-none">
+<!--<nav class="navbar justify-content-center d-md-none">
+    <a href="{% url 'home' %}" class="nav-link menu-active">HOME</a>
+    <a href="#" class="nav-link">STOCKS</a>
+</nav>-->
+<nav class="navbar flex-column d-none d-md-block">
     <a href="{% url 'home' %}" class="nav-link menu-active">HOME</a>
     <a href="#" class="nav-link">STOCKS</a>
 </nav>
-<nav class="nav flex-column d-none d-md-block">
-    <a href="{% url 'home' %}" class="nav-link menu-active">HOME</a>
-    <a href="#" class="nav-link">STOCKS</a>
-</nav>
-<nav class="nav fjustify-content-center d-md-none">
+<!--<nav class="navbar justify-content-center d-md-none">
     {% for g in genre %}
-        <a href="#" class="flex-md-fill nav-link">{{g.genre}}</a>
+        <a href="#" class="nav-link">{{g.genre}}</a>
     {% endfor %}
-</nav><nav class="nav flex-column mt-3 mb-5 ps-2 d-none d-md-block">
+</nav>-->
+<nav class="navbar flex-column mt-3 mb-5 ps-2 d-none d-md-block">
     {% for g in genre %}
         <a href="#" class="flex-md-fill nav-link">{{g.genre}}</a>
     {% endfor %}
