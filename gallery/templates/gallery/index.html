@@ -1,24 +1,47 @@
 {% extends "gallery/base.html" %}
 {% block title %}TIMA PHOTOS - Home{% endblock %}
 {% block menu %}
-<!--<nav class="navbar justify-content-center d-md-none">
-    <a href="{% url 'home' %}" class="nav-link menu-active">HOME</a>
-    <a href="#" class="nav-link">STOCKS</a>
-</nav>-->
-<nav class="navbar flex-column d-none d-md-block">
-    <a href="{% url 'home' %}" class="nav-link menu-active">HOME</a>
-    <a href="#" class="nav-link">STOCKS</a>
+<nav class="navbar navbar-expand d-md-none">
+    <div class="container justify-content-center">
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a href="{% url 'home' %}" class="nav-link active py-0" aria-current="page">HOME</a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link py-0">STOCKS</a>
+        </li>
+    </ul>
+    </div>
 </nav>
-<!--<nav class="navbar justify-content-center d-md-none">
+<nav class="navbar d-none d-md-block">
+        <ul class="navbar-nav text-md-start">
+        <li class="nav-item">
+            <a href="{% url 'home' %}" class="nav-link active py-0" aria-current="page">HOME</a>
+        </li>    
+        <li class="nav-item">
+            <a href="#" class="nav-link py-0">STOCKS</a>
+        </li>    
+    </ul>
+</nav>
+<nav class="navbar">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarGenreToggler" aria-controls="navbarGenreToggler" aria-expanded="false" aria-label="Navbar toggler">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarGenreToggler">
+            <div class="navbar-nav">    
+            {% for g in genre %}
+                <a href="#" class="nav-link">{{g.genre}}</a>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+</nav>
+<!--<nav class="navbar flex-column mt-3 mb-5 ps-2 d-none d-md-block">
     {% for g in genre %}
-        <a href="#" class="nav-link">{{g.genre}}</a>
+        <a href="#" class="text-secondary nav-link">{{g.genre}}</a>
     {% endfor %}
 </nav>-->
-<nav class="navbar flex-column mt-3 mb-5 ps-2 d-none d-md-block">
-    {% for g in genre %}
-        <a href="#" class="flex-md-fill nav-link">{{g.genre}}</a>
-    {% endfor %}
-</nav>
 {% endblock %}
 {% block main %}<div class="card-body">
     <h6 class="card-title title">{{rnd_photo.title}}
