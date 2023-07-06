@@ -23,17 +23,19 @@
         </li>    
     </ul>
 </nav>
-<nav class="navbar">
+<nav class="navbar navbar-expand-md">
     <div class="container-fluid">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarGenreToggler" aria-controls="navbarGenreToggler" aria-expanded="false" aria-label="Navbar toggler">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarGenreToggler">
-            <div class="navbar-nav">    
+            <ul class="navbar-nav flex-column text-md-start">    
             {% for g in genre %}
-                <a href="#" class="nav-link">{{g.genre}}</a>
+                <li class="nav-item">
+                    <a href="#" class="nav-link py-0">{{g.genre}}</a>
+                </li>
             {% endfor %}
-            </div>
+            </ul>
         </div>
     </div>
 </nav>

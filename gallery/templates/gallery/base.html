@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="The photo manager of TIMA PHOTOS">
     <link href="{% static 'tmphotosproject/bootstrap.min.css' %}" rel="stylesheet">
+    <script src="{% static 'tmphotosproject/bootstrap.min.js' %}"></script>    
     <link href="{% static 'tmphotosproject/style.css' %}" rel="stylesheet">
     <link rel="icon" href="{% static 'tmphotosproject/img/favicon.svg' %}" type="image/svg">
     <title>{% block title %}TIMA PHOTOS{% endblock %}</title>
@@ -16,11 +17,15 @@
         <div class="row">
             <div class="col-md-2">
                 <div class="my-2 text-md-start"><h3 class="title">TIMA PHOTOS</h3></div>
-                {% block menu %}{% endblock %}
-                <div class="card mt-5">{% block main %}{% endblock %}</div>
+                {% block menu %}{% endblock %}               
             </div>
             <div class="col-md-10 mt-2">{% block img %}{% endblock %}</div>
-        </div>       
+        </div> 
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card mt-2">{% block main %}{% endblock %}</div>
+            </div>
+        </div>      
     </div>
 </body>
 </html>
