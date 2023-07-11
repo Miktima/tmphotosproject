@@ -28,3 +28,8 @@ def image_url(request, url):
     print("image_url: ", url)
     photo_instance = get_object_or_404(Photo, url=url)
     return HttpResponse(photo_instance.src)
+
+def genre(request, genre_id):
+    # Select photo for genre_id
+    photo_ins = Photo.objects.order_by("pk").all()
+
