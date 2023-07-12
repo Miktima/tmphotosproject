@@ -32,7 +32,11 @@
             <ul class="navbar-nav flex-column text-md-start">    
             {% for g in genre %}
                 <li class="nav-item">
-                    <a href="{% url 'genre' g.genre|lower %}" class="nav-link py-0">{{g.genre}}</a>
+                    {% if g.genre|lower == genre_active%}
+                        <a href="{{g.genre|lower}}" class="nav-link py-0 active" aria-current="page">{{g.genre}}</a>
+                    {% else %}
+                        <a href="{{g.genre|lower}}" class="nav-link py-0">{{g.genre}}</a>
+                    {% endif %}
                 </li>
             {% endfor %}
             </ul>
@@ -40,20 +44,14 @@
     </div>
 </nav>
 {% endblock %}
-{% block img %}<figure class="figure">
-<img src="{% url 'image_url' rnd_photo.url %}" class="img-fluid rounded figure-img" alt="{{rnd_photo.title}}"> 
-<figcaption class="figure-caption text-end">
-    {{rnd_photo.title}}{% if rnd_photo.place %} &#124; {{rnd_photo.place}}{% endif %}
-    <a data-bs-toggle="collapse" href="#collapseKW" aria-expanded="false" aria-controls="collapseKW" class="link-secondary">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-filter" viewBox="0 0 16 16">
-            <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
-        </svg>
-    </a>
-    <div class="collapse" id="collapseKW">
-        <div class="card card-body">
-            <p class="card-text helptext"><small>{% for k in rnd_photo.keywords.all %}#{{k}} </small>{% endfor %}</p>
-        </div>
-    </div>    
-</figcaption>
-</figure>
+{% block img %}
+{% if photo %}
+<div class="row">
+    {% for p in photo %}
+    <div class="col">
+        <img src="{% url 'image_tmb_url' p.url_min %}" class="img-fluid rounded" alt="{{p.title}}"> 
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
 {%endblock %}
