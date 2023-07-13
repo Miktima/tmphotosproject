@@ -33,9 +33,9 @@
             {% for g in genre %}
                 <li class="nav-item">
                     {% if g.genre|lower == genre_active%}
-                        <a href="{{g.genre|lower}}" class="nav-link py-0 active" aria-current="page">{{g.genre}}</a>
+                        <a href="{% url 'genre' g.genre|lower %}" class="nav-link py-0 active" aria-current="page">{{g.genre}}</a>
                     {% else %}
-                        <a href="{{g.genre|lower}}" class="nav-link py-0">{{g.genre}}</a>
+                        <a href="{% url 'genre' g.genre|lower %}" class="nav-link py-0">{{g.genre}}</a>
                     {% endif %}
                 </li>
             {% endfor %}

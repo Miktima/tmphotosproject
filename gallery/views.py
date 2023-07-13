@@ -25,13 +25,13 @@ def home(request):
 
 def image_url(request, url):
     # Берем значение записи из таблицы photo 
-    # print("image_url: ", url)
+    print("image_url: ", url)
     photo_instance = get_object_or_404(Photo, url=url)
     return HttpResponse(photo_instance.src)
 
 def image_tmb_url(request, url):
     # Берем значение записи из таблицы photo 
-    print("image_url: ", url)
+    print("image_url_min: ", url)
     photo_instance = get_object_or_404(Photo, url_min=url)
     return HttpResponse(photo_instance.src_min)
 
