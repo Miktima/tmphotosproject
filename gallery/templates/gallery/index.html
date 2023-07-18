@@ -31,8 +31,8 @@
         <div class="collapse navbar-collapse" id="navbarGenreToggler">
             <ul class="navbar-nav flex-column text-md-start">    
             {% for g in genre %}
-                <li class="nav-item">
-                    <a href="{% url 'genre' g.genre|lower %}" class="nav-link py-0">{{g.genre}}</a>
+                <li class="nav-item">                    
+                    <a href="{% url 'genre_menu' g.genre|slugify %}/" class="nav-link py-0">{{g.genre}}</a>
                 </li>
             {% endfor %}
             </ul>
@@ -41,7 +41,7 @@
 </nav>
 {% endblock %}
 {% block img %}<figure class="figure">
-<img src="{% url 'image_url' rnd_photo.url %}" class="img-fluid rounded figure-img" alt="{{rnd_photo.title}}"> 
+<img src="{% url 'url_image' rnd_photo.url %}" class="img-fluid rounded figure-img" alt="{{rnd_photo.title}}"> 
 <figcaption class="figure-caption text-end">
     {{rnd_photo.title}}{% if rnd_photo.place %} &#124; {{rnd_photo.place}}{% endif %}
     <a data-bs-toggle="collapse" href="#collapseKW" aria-expanded="false" aria-controls="collapseKW" class="link-secondary">
@@ -51,7 +51,7 @@
     </a>
     <div class="collapse" id="collapseKW">
         <div class="card card-body">
-            <p class="card-text helptext"><small>{% for k in rnd_photo.keywords.all %}#{{k}} </small>{% endfor %}</p>
+            <p class="card-text helptext">{% for k in rnd_photo.keywords.all %}<small>#{{k}} </small>{% endfor %}</p>
         </div>
     </div>    
 </figcaption>

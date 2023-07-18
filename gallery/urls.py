@@ -1,9 +1,15 @@
 from django.urls import path, re_path, include
 from gallery import views
 
+prefix_photo = "DSC"
+suffix_tmb = "tn"
+
 urlpatterns = [
     path('', views.home, name='home'),
-    re_path(r'([a-zA-Z\s]+)', views.genre, name='genre'),
-    re_path(r'(\w+)DSC_(\d+).jpg$', views.image_url, name='image_url'),
-    re_path(r'(\w+DSC_(\d)+_(\w)+).jpg$', views.image_tmb_url, name='image_tmb_url'),
+    path('<slug:genre>', views.genre, name='genre_menu'),
+    path('<slug:genre>/', views.genre, name='genre_content'),
+    re_path(r'^(?P<url_image>\w+_' + prefix_photo + '_\d{4}.jpg)$',\
+             views.image_url, name='url_image'),
+    re_path(r'^(?P<url_tmb>\w+_' + prefix_photo + '_\d{4}_' + suffix_tmb + \
+            '.jpg)$', views.image_tmb_url, name='image_tmb_url'),
 ]

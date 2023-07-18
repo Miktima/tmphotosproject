@@ -23,23 +23,24 @@ def home(request):
     }
     return render(request, 'gallery/index.html', context)
 
-def image_url(request, url):
+def image_url(request, url_image):
     # Берем значение записи из таблицы photo 
-    print("image_url: ", url)
-    photo_instance = get_object_or_404(Photo, url=url)
+    print("image_url: ", url_image)
+    photo_instance = get_object_or_404(Photo, url=url_image)
     return HttpResponse(photo_instance.src)
 
-def image_tmb_url(request, url):
+def image_tmb_url(request, url_tmb):
     # Берем значение записи из таблицы photo 
-    print("image_url_min: ", url)
-    photo_instance = get_object_or_404(Photo, url_min=url)
+    print("image_url_min: ", url_tmb)
+    photo_instance = get_object_or_404(Photo, url_min=url_tmb)
     return HttpResponse(photo_instance.src_min)
 
 def genre(request, genre):
     # Select genres
     genre_ins = Genre.objects.order_by("pk").all()
     # Select photo for genre_id
-    photo_ins = Photo.objects.order_by("pk").filter(genre__genre__iexact=genre)
+    reduced_genre = genre.replace("-", " ")
+    photo_ins = Photo.objects.order_by("pk").filter(genre__genre__iexact=reduced_genre)
     print("view.genre:", genre)
     context = {
         "genre": genre_ins,
