@@ -1,4 +1,4 @@
 # tmphotosproject
 New Django project for tmphotos.ru
-high resolution photos: 1280:x landscape, x:960 portrait
-thumbnails: 340 max and 80% quality
+high resolution photos: width 1280 px for landscape, height 960 px for portrait
+thumbnails: width:height 340:226 px and 80% quality for landscape 
