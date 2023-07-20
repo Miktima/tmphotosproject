@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
+from django.core.paginator import Paginator
 from django.urls import reverse
 from managephotos.models import Genre, Photo
 import random
@@ -25,13 +26,13 @@ def home(request):
 
 def image_url(request, url_image):
     # Берем значение записи из таблицы photo 
-    print("image_url: ", url_image)
+    # print("image_url: ", url_image)
     photo_instance = get_object_or_404(Photo, url=url_image)
     return HttpResponse(photo_instance.src)
 
 def image_tmb_url(request, url_tmb):
     # Берем значение записи из таблицы photo 
-    print("image_url_min: ", url_tmb)
+    # print("image_url_min: ", url_tmb)
     photo_instance = get_object_or_404(Photo, url_min=url_tmb)
     return HttpResponse(photo_instance.src_min)
 
@@ -40,12 +41,17 @@ def genre(request, genre):
     genre_ins = Genre.objects.order_by("pk").all()
     # Select photo for genre_id
     reduced_genre = genre.replace("-", " ")
-    photo_ins = Photo.objects.order_by("pk").filter(genre__genre__iexact=reduced_genre)
-    print("view.genre:", genre)
+    photo_ins = Photo.objects.order_by("?").filter(genre__genre__iexact=reduced_genre)
+    # 9 photos at the page
+    paginator = Paginator(photo_ins, 9)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)    
+    # print("view.genre:", genre)
     context = {
         "genre": genre_ins,
         "genre_active": genre,
-        "photo": photo_ins 
+        "photo": photo_ins,
+        "page_obj": page_obj
     }
     return render(request, 'gallery/genre.html', context)    
 
