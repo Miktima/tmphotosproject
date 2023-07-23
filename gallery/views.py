@@ -50,7 +50,6 @@ def genre(request, genre):
     context = {
         "genre": genre_ins,
         "genre_active": genre,
-        "photo": photo_ins,
         "page_obj": page_obj
     }
     return render(request, 'gallery/genre.html', context)    
