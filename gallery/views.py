@@ -54,3 +54,17 @@ def genre(request, genre):
     }
     return render(request, 'gallery/genre.html', context)    
 
+def genre_image(request, genre, image):
+    # Select genres
+    genre_ins = Genre.objects.order_by("pk").all()
+    # Select photo for genre_id
+    reduced_genre = genre.replace("-", " ")
+    photo_ins = Photo.objects.order_by("?").filter(genre__genre__iexact=reduced_genre)
+    # Get photo instance of hires photo
+    photo_instance = get_object_or_404(Photo, url=image)
+    context = {
+        "genre": genre_ins,
+        "genre_active": genre,
+        "photo": photo_instance
+    }
+    return render(request, 'gallery/genre_image.html', context)    

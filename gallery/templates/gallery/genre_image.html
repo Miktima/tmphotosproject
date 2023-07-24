@@ -45,38 +45,19 @@
 </nav>
 {% endblock %}
 {% block img %}
-{% if page_obj %}
-<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 gy-4">
-    {% for p in page_obj %}
-        <div class="col">
-            <a href="{% url 'genre_image' genre_active p.url %}">
-                <img src="{% url 'image_tmb_url' p.url_min %}" class="img-fluid rounded" alt="{{p.title}}"> 
-            </a>
-        </div>
-    {% endfor %}
-</div>
-<div class="row mt-4">
-    <div class="col-12 d-flex justify-content-end">
-        <div class="pagination">
-            <span class="step-links">
-                {% if page_obj.has_previous %}
-                    <a href="?page={{ page_obj.previous_page_number }}" class="link-secondary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
-                      </svg></a>
-                {% endif %}     
-
-                <span class="current">
-                    page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-                </span>     
-
-                {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}" class="link-secondary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
-                      </svg></a>
-                {% endif %}
-            </span>
-        </div>
-    </div>
-</div>
-{% endif %}
-{%endblock %}
+<figure class="figure">
+    <img src="{% url 'url_image' photo.url %}" class="img-fluid rounded figure-img" alt="{{photo.title}}"> 
+    <figcaption class="figure-caption text-end">
+        {{photo.title}}{% if photo.place %} &#124; {{photo.place}}{% endif %}
+        <a data-bs-toggle="collapse" href="#collapseKW" aria-expanded="false" aria-controls="collapseKW" class="link-secondary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-filter" viewBox="0 0 16 16">
+                <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
+            </svg>
+        </a>
+        <div class="collapse" id="collapseKW">
+            <div class="card card-body">
+                <p class="card-text helptext">{% for k in photo.keywords.all %}<small>#{{k}} </small>{% endfor %}</p>
+            </div>
+        </div>    
+    </figcaption>
+    </figure>{%endblock %}
