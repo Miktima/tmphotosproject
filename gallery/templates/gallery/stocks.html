@@ -1,0 +1,67 @@
+{% extends "gallery/base.html" %}
+{% block title %}TIMA PHOTOS - Home{% endblock %}
+{% block menu %}
+<nav class="navbar navbar-expand d-md-none">
+    <div class="container justify-content-center">
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a href="{% url 'home' %}" class="nav-link py-0" >HOME</a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'stocks' %}" class="nav-link active py-0" aria-current="page">STOCKS</a>
+        </li>
+    </ul>
+    </div>
+</nav>
+<nav class="navbar d-none d-md-block">
+        <ul class="navbar-nav text-md-start">
+        <li class="nav-item">
+            <a href="{% url 'home' %}" class="nav-link py-0">HOME</a>
+        </li>    
+        <li class="nav-item">
+            <a href="{% url 'stocks' %}" class="nav-link active py-0" aria-current="page">STOCKS</a>
+        </li>    
+    </ul>
+</nav>
+<nav class="navbar navbar-expand-md">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarGenreToggler" aria-controls="navbarGenreToggler" aria-expanded="false" aria-label="Navbar toggler">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarGenreToggler">
+            <ul class="navbar-nav flex-column text-md-start">    
+            {% for g in genre %}
+                <li class="nav-item">
+                    <a href="{% url 'genre_menu' g.genre|slugify %}/" class="nav-link py-0">{{g.genre}}</a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+{% block img %}
+{% load static %}
+<div class="row h-100">
+    <div class="col align-self-start">
+        <a href="https://www.shutterstock.com/g/miktima?rid=227170641&utm_medium=email&utm_source=ctrbreferral-link">
+        <img src="{% static 'tmphotosproject/img/shutterstock_logo.svg' %}" class="img-fluid" alt="Shutterstock logo">
+        </a>
+    </div>
+    <div class="col align-self-center">
+        <a href="https://www.istockphoto.com/portfolio/MikhailTimofeev">
+        <img src="{% static 'tmphotosproject/img/istock_logo.svg' %}" class="img-fluid" alt="IStock logo">
+        </a>
+    </div>
+    <div class="col align-self-end">
+        <a href="https://www.dreamstime.com/tima28_info">
+        <img src="{% static 'tmphotosproject/img/dreamstime_logo.svg' %}" class="img-fluid" alt="Dreamstime logo">
+        </a>
+    </div>
+</div>
+<div class="row mt-5">
+    <div class="col align-self-center">
+        <p class="helptext"><small>All content and photographs © 2023 Tima (aka Mikhail Timofeev) Photos</small></p>
+    </div>
+</div>
+{%endblock %}

@@ -6,6 +6,7 @@ suffix_tmb = "tn"
 
 urlpatterns = [
     path('', views.home, name='home'),
+    path('stocks/', views.stocks, name='stocks'),
     path('<slug:genre>', views.genre, name='genre_menu'),
     path('<slug:genre>/', views.genre, name='genre_content'),
     re_path(r'^(?P<genre>[a-z-]+)/(?P<image>\w+_' + prefix_photo + '_\d{4}[-_\d]{,2}.jpg)$',\
