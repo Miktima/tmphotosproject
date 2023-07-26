@@ -4,7 +4,6 @@ from django.core.files import File
 from django.urls import reverse
 import random
 import string
-import random
 import os
 from django.contrib.auth.models import User
 from managephotos.MpClass import MpClass
