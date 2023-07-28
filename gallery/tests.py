@@ -7,7 +7,7 @@ from django.urls import reverse
 
 
 class GalleryIndexViewTests(TestCase):
-    
+
     @classmethod
     def setUpTestData(cls):
     # Инициализируем жанры
@@ -57,12 +57,53 @@ class GalleryIndexViewTests(TestCase):
             pp.keywords.add(k1, k2, k3)
 
     def test_home(self):
+        # test home page
         response = self.client.get(reverse('home'))
         # test status code
         self.assertEqual(response.status_code, 200)
         # test template
         self.assertTemplateUsed(response, 'gallery/index.html')
-        
+
+    def test_image_url(self):
+        # test friendly urls of hires images
+        photo_ins = Photo.objects.order_by('pk').all()
+        for p in photo_ins:
+            response = self.client.get(reverse('url_image', 
+                        kwargs={'url_image': p.url}))
+            # test status code
+            self.assertEqual(response.status_code, 200)
+
+    def test_image_tmb_url(self):
+        # test friendly urls of thumbnails
+        photo_ins = Photo.objects.order_by('pk').all()
+        for p in photo_ins:
+            response = self.client.get(reverse('image_tmb_url', 
+                        kwargs={'url_tmb': p.url_min}))
+            # test status code
+            self.assertEqual(response.status_code, 200)
+
+    def test_stocks_page(self):
+        # test stocks page
+        response = self.client.get(reverse('stocks'))
+        # test status code
+        self.assertEqual(response.status_code, 200)
+        # test template
+        self.assertTemplateUsed(response, 'gallery/stocks.html')
+
+    def test_genre_image(self):
+        # test genre page with a hires image
+        genre_ins = Genre.objects.order_by('pk').all()
+        photo_ins = Photo.objects.order_by('pk').all()
+        for g in genre_ins:
+            link_genre = g.genre.lower()
+            link_genre = link_genre.replace(' ', '-')
+            for p in photo_ins:
+                response = self.client.get(reverse('genre_image', 
+                        kwargs={'genre': link_genre, 'image': p.url}))
+                # test status code
+                self.assertEqual(response.status_code, 200)
+            
+
     # def test_pagination_first(self):
     #     response = self.client.get(reverse('index'))
     #     # print (response.context)
