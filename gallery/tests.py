@@ -95,29 +95,34 @@ class GalleryIndexViewTests(TestCase):
         genre_ins = Genre.objects.order_by('pk').all()
         photo_ins = Photo.objects.order_by('pk').all()
         for g in genre_ins:
+            # reduce genre to the slag type
             link_genre = g.genre.lower()
             link_genre = link_genre.replace(' ', '-')
             for p in photo_ins:
+                # test for every images and genres
                 response = self.client.get(reverse('genre_image', 
                         kwargs={'genre': link_genre, 'image': p.url}))
                 # test status code
                 self.assertEqual(response.status_code, 200)
-            
 
-    # def test_pagination_first(self):
-    #     response = self.client.get(reverse('index'))
-    #     # print (response.context)
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertTrue('is_paginated' in response.context)
-    #     self.assertTrue(response.context['is_paginated'] == True)
-    #     # Pagination is set to 3 photos
-    #     self.assertEqual(len(response.context['page_obj']), 3)
-
-    # def test_pagination_second(self):
-    #     response = self.client.get(reverse('index')+'?page=2')
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertTrue('is_paginated' in response.context)
-    #     self.assertTrue(response.context['is_paginated'] == True)
-    #     # 5 photos is available, so 2 photos are on the second page
-    #     self.assertEqual(len(response.context['page_obj']), 2)
-
+    def test_genre(self):
+        # test genre page with a hires image
+        genre_ins = Genre.objects.order_by('pk').all()
+        for g in genre_ins:
+            # reduce genre to the slag type
+            link_genre = g.genre.lower()
+            link_genre = link_genre.replace(' ', '-')
+            # test for every genres
+            response = self.client.get(reverse('genre_content', 
+                                    kwargs={'genre': link_genre}))
+            # test status code
+            self.assertEqual(response.status_code, 200)
+            if 'is_paginated' in response.context:
+            # Pagination is set to 9 photos
+                self.assertEqual(len(response.context['page_obj']), 9)
+                resp2 = self.client.get(reverse('genre_content')+'?page=2')
+                self.assertEqual(resp2.status_code, 200)
+                self.assertTrue('is_paginated' in resp2.context)
+                self.assertTrue(resp2.context['is_paginated'] == True)
+                # must be 2 photos or more
+                self.assertGreaterEqual(len(response.context['page_obj']), 2)
