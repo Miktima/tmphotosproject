@@ -64,8 +64,8 @@ class ManagephotosModelTests(TestCase):
         pp = Photo.objects.create(
             src = image,
             src_min = image_tn,
-            url = "Friendly_URL_of_the_photo_test_files_DSC_0503.jpg",
-            url_min = "Friendly_URL_of_the_thumbnail_test_files_DSC_0503.jpg",
+            url = "Friendly-URL-of-the-photo-test-files-DSC_0503.jpg",
+            url_min = "Friendly-URL-of-the-thumbnail-test-files-DSC_0503.jpg",
             title = "Title with question? and!",
             star = 1,
             place = "Place of the photo"            
@@ -91,8 +91,8 @@ class ManagephotosModelTests(TestCase):
         self.assertEqual("Title with question? and!", pp.title)
         self.assertEqual("Place of the photo", pp.place)
         # Проверяем friendly urls
-        self.assertEqual("Friendly_URL_of_the_photo_test_files/DSC_0503.jpg", pp.url)
-        self.assertEqual("Friendly_URL_of_the_thumbnail_test_files/DSC_0503.jpg", pp.url_min)
+        self.assertEqual("Friendly-URL-of-the-photo-test-files-DSC_0503.jpg", pp.url)
+        self.assertEqual("Friendly-URL-of-the-thumbnail-test-files-DSC_0503.jpg", pp.url_min)
         # Удаление Записи в Photo
         # начальное число записей
         n_genre = Genre.objects.count()

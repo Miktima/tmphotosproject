@@ -47,8 +47,8 @@ class GalleryIndexViewTests(TestCase):
             pp = Photo.objects.create(
                 src = image,
                 src_min = image_tn,
-                url = "Friendly_URL_" + str(i) + "_" + intitle + "_photo_DSC_0503.jpg",
-                url_min = "Friendly_URL_" + str(i) + "_" + intitle + "_tmb_DSC_0503_tn.jpg",
+                url = "Friendly-URL-" + str(i) + "-" + intitle + "-photo-DSC_0503.jpg",
+                url_min = "Friendly-URL-" + str(i) + "-" + intitle + "-tmb-DSC_0503_tn.jpg",
                 title = "Title with number " + str(i),
                 star = rnd_star,
                 place = "Place #" + str(i)            

@@ -45,8 +45,8 @@ class ManagephotosIndexViewTests(TestCase):
             pp = Photo.objects.create(
                 src = image,
                 src_min = image_tn,
-                url = "Friendly_URL_" + str(i) + "_photo/DSC_0503.jpg",
-                url_min = "Friendly_URL_" + str(i) + "_thumbnail/DSC_0503.jpg",
+                url = "Friendly-URL-" + str(i) + "-photo-DSC_0503.jpg",
+                url_min = "Friendly-URL-" + str(i) + "-thumbnail-DSC_0503.jpg",
                 title = "Title with number " + str(i),
                 star = rnd_star,
                 place = "Place #" + str(i)            
@@ -163,8 +163,8 @@ class ManagephotosAddPhotoViewTests(TestCase):
 		# Создаем ЧПУ для фото и эскиза
         f_url = mptool.convertUrl(str(photo_row.src.url), str(photo_row.title))
         f_url_min = mptool.convertUrl(str(photo_row.src_min.url), str(photo_row.title))
-        self.assertRegex(f_url, "^This_is_a_title_DSC_0503\w*.jpg$")
-        self.assertRegex(f_url_min, "^This_is_a_title_DSC_0503_tn\w*.jpg$")
+        self.assertRegex(f_url, "^This-is-a-title-DSC_0503\w*.jpg$")
+        self.assertRegex(f_url_min, "^This-is-a-title-DSC_0503_tn\w*.jpg$")
         test_list = []
         # Заполняем список для формирования заголовка
         for k in range(0, 7):
@@ -173,7 +173,7 @@ class ManagephotosAddPhotoViewTests(TestCase):
             test_list.append(testString)
         f_url = mptool.convertUrl(str(photo_row.src.url), " ".join(test_list))
         f_url_min = mptool.convertUrl(str(photo_row.src_min.url), " ".join(test_list))
-        result_str = test_list[0] + "_" + test_list[1] + "_" + test_list[2] + "_"
+        result_str = test_list[0] + "-" + test_list[1] + "-" + test_list[2] + "-"
         for i in test_list:
             print(i)
         self.assertRegex(f_url, "^" + result_str + "DSC_0503\w*.jpg$")
@@ -185,7 +185,7 @@ class ManagephotosAddPhotoViewTests(TestCase):
             test_list.append(testString)
         f_url = mptool.convertUrl(str(photo_row.src.url), "The " + " ".join(test_list))
         f_url_min = mptool.convertUrl(str(photo_row.src_min.url), "A " + " ".join(test_list))
-        result_str = test_list[0] + "_" + test_list[1] + "_" + test_list[2] + "_"
+        result_str = test_list[0] + "-" + test_list[1] + "-" + test_list[2] + "-"
         self.assertRegex(f_url, "^" + result_str + "DSC_0503\w*.jpg$")
         self.assertRegex(f_url_min, "^" + result_str + "DSC_0503_tn\w*.jpg", f_url_min)        
 

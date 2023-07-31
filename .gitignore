@@ -7,3 +7,5 @@ gallery/__pycache__/
 .gitsecret/keys/random_seed
 !*.secret
 tmphotosproject/settings.py
+tmphotosproject/key.txt
+tmphotosproject/db.txt

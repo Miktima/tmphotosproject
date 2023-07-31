@@ -8,9 +8,9 @@ class MpClass:
     def convertUrl(self, src:str, title:str):
         photoname = src[src.rfind("/")+1:(len(src))]
         if len(title) <= self.lenFriendlyUrl:
-            suburl = title.replace(" ", "_")
-            suburl = re.sub("\W", "", suburl)
-            return suburl + "_" + photoname
+            suburl = title.replace(" ", "-")
+            suburl = re.sub("[^a-zA-Z0-9_-]", "", suburl)
+            return suburl + "-" + photoname
         else:
             # Убираем артиклы, если они есть в начале
             title = title.replace("The ", "", 1)
@@ -26,6 +26,6 @@ class MpClass:
                 if suburl == "":
                     suburl += iword
                 else:
-                    suburl += "_" + iword
-            suburl = re.sub("\W", "", suburl)
-            return suburl + "_" + photoname
+                    suburl += "-" + iword
+            suburl = re.sub("[^a-zA-Z0-9_-]", "", suburl)
+            return suburl + "-" + photoname
