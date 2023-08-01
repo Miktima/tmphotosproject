@@ -9,3 +9,5 @@ gallery/__pycache__/
 tmphotosproject/settings.py
 tmphotosproject/key.txt
 tmphotosproject/db.txt
+tmphotosproject/static.txt
+static/
