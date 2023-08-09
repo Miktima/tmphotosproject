@@ -73,3 +73,13 @@ def stocks(request):
         "genre": genre_ins,
     }
     return render(request, 'gallery/stocks.html', context)
+
+def error404(request, exception):
+    # Select genres
+    genre_ins = Genre.objects.order_by("pk").all()
+    context = {
+        "genre": genre_ins,
+    }
+    response = render(request, 'gallery/404.html', context)
+    response.status_code = 404
+    return response

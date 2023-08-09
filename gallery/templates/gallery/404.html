@@ -32,11 +32,7 @@
             <ul class="navbar-nav flex-column text-md-start">    
             {% for g in genre %}
                 <li class="nav-item">
-                    {% if g.genre|lower == genre_active%}
-                        <a href="{% url 'genre_menu' g.genre|slugify %}/" class="nav-link py-0 active" aria-current="page">{{g.genre}}</a>
-                    {% else %}
-                        <a href="{% url 'genre_menu' g.genre|slugify %}/" class="nav-link py-0">{{g.genre}}</a>
-                    {% endif %}
+                    <a href="{% url 'genre_menu' g.genre|slugify %}/" class="nav-link py-0">{{g.genre}}</a>
                 </li>
             {% endfor %}
             </ul>
@@ -45,19 +41,9 @@
 </nav>
 {% endblock %}
 {% block img %}
-<figure class="figure">
-    <img src="{% url 'url_image' photo.url %}" class="img-fluid rounded figure-img" alt="{{photo.title}}"> 
-    <figcaption class="figure-caption text-end">
-        {{photo.title}}{% if photo.place %} &#124; {{photo.place}}{% endif %}
-        <a data-bs-toggle="collapse" href="#collapseKW" aria-expanded="false" aria-controls="collapseKW" class="link-secondary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-filter" viewBox="0 0 16 16">
-                <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
-            </svg>
-        </a>
-        <div class="collapse" id="collapseKW">
-            <div class="card card-body">
-                <p class="card-text helptext">{% for k in photo.keywords.all %}<small>#{{k}} </small>{% endfor %}</p>
-            </div>
-        </div>    
-    </figcaption>
-    </figure>{%endblock %}
+{% load static %}
+    <div class="row h-100">
+        <h3>Page not found</h3>
+        <img src="{% static 'tmphotosproject/img/error404.svg' %}" class="img-fluid" alt="404 error"> 
+    </div>
+{%endblock %}
