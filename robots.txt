@@ -1,0 +1,2 @@
+User-agent: * 
+Sitemap: https://tmphotos.ru/sitemap.xml
