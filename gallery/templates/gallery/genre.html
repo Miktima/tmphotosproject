@@ -32,7 +32,7 @@
             <ul class="navbar-nav flex-column text-md-start">    
             {% for g in genre %}
                 <li class="nav-item">
-                    {% if g.genre|lower == genre_active%}
+                    {% if g.genre|slugify == genre_active %}
                         <a href="{% url 'genre_menu' g.genre|slugify %}/" class="nav-link py-0 active" aria-current="page">{{g.genre}}</a>
                     {% else %}
                         <a href="{% url 'genre_menu' g.genre|slugify %}/" class="nav-link py-0">{{g.genre}}</a>
