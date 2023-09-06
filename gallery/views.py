@@ -42,8 +42,17 @@ def genre(request, genre):
     # Select photo for genre_id
     reduced_genre = genre.replace("-", " ")
     photo_ins = Photo.objects.order_by("?").filter(genre__genre__iexact=reduced_genre)
+    # fill dict with new urls
+    photoObj = []
+    for u in photo_ins:        
+        tmpDict = {}
+        tmpDict["url"] = (u.url).replace(".jpg", ".html")
+        tmpDict["url_min"] = u.url_min
+        tmpDict["title"] = u.title
+        photoObj.append(tmpDict)
     # 9 photos at the page
-    paginator = Paginator(photo_ins, 9)
+    # paginator = Paginator(photo_ins, 9)
+    paginator = Paginator(photoObj, 9)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)    
     # print("view.genre:", genre)
@@ -57,6 +66,9 @@ def genre(request, genre):
 def genre_image(request, genre, image):
     # Select genres
     genre_ins = Genre.objects.order_by("pk").all()
+    # Change from html to jpg suffix, if html suffix occurs
+    if ".html" in image:
+        image = image.replace(".html", ".jpg")
     # Get photo instance of hires photo
     photo_instance = get_object_or_404(Photo, url=image)
     context = {
