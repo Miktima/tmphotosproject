@@ -69,12 +69,30 @@ def genre_image(request, genre, image):
     # Change from html to jpg suffix, if html suffix occurs
     if ".html" in image:
         image = image.replace(".html", ".jpg")
+    # Select photo for genre_id
+    reduced_genre = genre.replace("-", " ")
+    photo_ins = Photo.objects.order_by("?").filter(genre__genre__iexact=reduced_genre)
+    # fill dict with new urls for Carousel
+    photoObj = []
+    for u in photo_ins:        
+        tmpDict = {}
+        tmpDict["url"] = u.url
+        if u.url == image:
+            tmpDict["active"] = 1
+        else:
+            tmpDict["active"] = 0
+        tmpDict["url_min"] = u.url_min
+        tmpDict["title"] = u.title
+        tmpDict["place"] = u.place
+        tmpDict["keywords"] = u.keywords.all()
+        photoObj.append(tmpDict)
     # Get photo instance of hires photo
-    photo_instance = get_object_or_404(Photo, url=image)
+    # photo_instance = get_object_or_404(Photo, url=image)
     context = {
         "genre": genre_ins,
         "genre_active": genre,
-        "photo": photo_instance
+        # "photo": photo_instance,
+        "photo_list": photoObj
     }
     return render(request, 'gallery/genre_image.html', context)    
 

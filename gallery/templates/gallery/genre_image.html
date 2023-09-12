@@ -45,19 +45,36 @@
 </nav>
 {% endblock %}
 {% block img %}
-<figure class="figure">
-    <img src="{% url 'url_image' photo.url %}" class="img-fluid rounded figure-img" alt="{{photo.title}}"> 
-    <figcaption class="figure-caption text-end">
-        {{photo.title}}{% if photo.place %} &#124; {{photo.place}}{% endif %}
-        <a data-bs-toggle="collapse" href="#collapseKW" aria-expanded="false" aria-controls="collapseKW" class="link-secondary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-filter" viewBox="0 0 16 16">
-                <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
-            </svg>
-        </a>
-        <div class="collapse" id="collapseKW">
-            <div class="card card-body">
-                <p class="card-text helptext">{% for k in photo.keywords.all %}<small>#{{k}} </small>{% endfor %}</p>
-            </div>
-        </div>    
-    </figcaption>
-    </figure>{%endblock %}
+<div id="carouselGenre" class="carousel slide">
+    <div class="carousel-inner">
+        {% for photo in photo_list %}
+        <div class="carousel-item {% if photo.active == 1 %}active{% endif %}">
+            <figure class="figure">
+                <img src="{% url 'url_image' photo.url %}" class="img-fluid rounded figure-img" alt="{{photo.title}}"> 
+                <figcaption class="figure-caption text-end">
+                    {{photo.title}}{% if photo.place %} &#124; {{photo.place}}{% endif %}
+                    <a data-bs-toggle="collapse" href="#collapseKW" aria-expanded="false" aria-controls="collapseKW" class="link-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-filter" viewBox="0 0 16 16">
+                            <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
+                        </svg>
+                    </a>
+                    <div class="collapse" id="collapseKW">
+                        <div class="card card-body">
+                            <p class="card-text helptext">{% for k in photo.keywords %}<small>#{{k}} </small>{% endfor %}</p>
+                        </div>
+                    </div>    
+                </figcaption>
+            </figure>
+        </div>
+        {% endfor %}
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselGenre" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Предыдущий</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselGenre" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Следующий</span>
+    </button>        
+</div>
+{%endblock %}
