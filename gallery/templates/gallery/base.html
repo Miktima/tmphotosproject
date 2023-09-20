@@ -8,7 +8,6 @@
     <meta name="description" content="The photo manager of TIMA PHOTOS">
     <link href="{% static 'tmphotosproject/bootstrap.min.css' %}" rel="stylesheet">
     <script src="{% static 'tmphotosproject/bootstrap.min.js' %}"></script>    
-    <link href="{% static 'tmphotosproject/style.css' %}" rel="stylesheet">
     <link rel="icon" href="{% static 'tmphotosproject/img/favicon.svg' %}" type="image/svg">
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-109745137-1"></script>
@@ -39,7 +38,7 @@
     <div class="container text-center">
         <div class="row">
             <div class="col-md-2">
-                <div class="my-2 text-md-start"><h3 class="title">TIMA PHOTOS</h3></div>
+                <div class="my-2 text-md-start"><h3 class="title text-secondary">TIMA PHOTOS</h3></div>
                 {% block menu %}{% endblock %}               
             </div>
             <div class="col-md-10 mt-2">{% block img %}{% endblock %}</div>
