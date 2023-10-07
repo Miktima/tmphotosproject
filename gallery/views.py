@@ -16,11 +16,28 @@ def home(request):
     for ph in photo_ins:
         pk_list.append(ph.pk)
         weight_list.append(ph.star)
-    choice_list = random.choices(pk_list, weights=weight_list, k=1)
-    photo_ch = Photo.objects.get(pk=choice_list[0])
+    # Return 10 photos
+    choice_list = random.choices(pk_list, weights=weight_list, k=10)
+    # photo_ch = Photo.objects.get(pk=choice_list[0])
+    photoObj = []
+    i = 0
+    for u in choice_list:
+        photo_ch = Photo.objects.get(pk=u)        
+        tmpDict = {}
+        tmpDict["url"] = photo_ch.url
+        if i == 0:
+            tmpDict["active"] = 1
+            i += 1
+        else:
+            tmpDict["active"] = 0
+        tmpDict["url_min"] = photo_ch.url_min
+        tmpDict["title"] = photo_ch.title
+        tmpDict["place"] = photo_ch.place
+        tmpDict["keywords"] = photo_ch.keywords.all()
+        photoObj.append(tmpDict)
     context = {
         "genre": genre_ins,
-        "rnd_photo": photo_ch 
+        "rnd_photo": photoObj
     }
     return render(request, 'gallery/index.html', context)
 
@@ -72,7 +89,7 @@ def genre_image(request, genre, image):
     # Select photo for genre_id
     reduced_genre = genre.replace("-", " ")
     photo_ins = Photo.objects.order_by("?").filter(genre__genre__iexact=reduced_genre)
-    # fill dict with new urls for Carousel
+    # fill dict with new urls of hires photos for Carousel
     photoObj = []
     for u in photo_ins:        
         tmpDict = {}
@@ -86,8 +103,6 @@ def genre_image(request, genre, image):
         tmpDict["place"] = u.place
         tmpDict["keywords"] = u.keywords.all()
         photoObj.append(tmpDict)
-    # Get photo instance of hires photo
-    # photo_instance = get_object_or_404(Photo, url=image)
     context = {
         "genre": genre_ins,
         "genre_active": genre,
