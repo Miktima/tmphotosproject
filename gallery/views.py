@@ -16,8 +16,17 @@ def home(request):
     for ph in photo_ins:
         pk_list.append(ph.pk)
         weight_list.append(ph.star)
-    # Return 10 photos
-    choice_list = random.choices(pk_list, weights=weight_list, k=10)
+    # Return 10 photos or less
+    nphotos = 10 if len(pk_list) > 10 else len(pk_list)
+    choice_list = []
+    # Get unrepeated list of photos
+    for i in range (nphotos):
+        cl = random.choices(pk_list, weights=weight_list, k=1)
+        choice_list.append(cl[0])
+        # remove chosen elements
+        pos = pk_list.index(cl[0])
+        pk_list.remove(cl[0])
+        weight_list.pop(pos)
     # photo_ch = Photo.objects.get(pk=choice_list[0])
     photoObj = []
     i = 0
