@@ -99,8 +99,12 @@ def genre_image(request, genre, image):
     reduced_genre = genre.replace("-", " ")
     photo_ins = Photo.objects.order_by("?").filter(genre__genre__iexact=reduced_genre)
     # fill dict with new urls of hires photos for Carousel
+    # limit - 10 photos
     photoObj = []
-    for u in photo_ins:        
+    i = 0
+    for u in photo_ins:
+        if i >= 10:
+            break        
         tmpDict = {}
         tmpDict["url"] = u.url
         if u.url == image:
@@ -112,6 +116,7 @@ def genre_image(request, genre, image):
         tmpDict["place"] = u.place
         tmpDict["keywords"] = u.keywords.all()
         photoObj.append(tmpDict)
+        i += 1
     context = {
         "genre": genre_ins,
         "genre_active": genre,
