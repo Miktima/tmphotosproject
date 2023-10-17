@@ -95,28 +95,37 @@ def genre_image(request, genre, image):
     # Change from html to jpg suffix, if html suffix occurs
     if ".html" in image:
         image = image.replace(".html", ".jpg")
-    # Select photo for genre_id
+
+    # fill dict with new urls of hires photos for Carousel
+    photoObj = []
+    # select choosen photo
+    photo_instance = get_object_or_404(Photo, url=image)
+    tmpDict = {}
+    tmpDict["url"] = photo_instance.url
+    tmpDict["active"] = 1
+    tmpDict["url_min"] = photo_instance.url_min
+    tmpDict["title"] = photo_instance.title
+    tmpDict["place"] = photo_instance.place
+    tmpDict["keywords"] = photo_instance.keywords.all()
+    photoObj.append(tmpDict)
+    # Select 9 random photo for genre_id
     reduced_genre = genre.replace("-", " ")
     photo_ins = Photo.objects.order_by("?").filter(genre__genre__iexact=reduced_genre)
-    # fill dict with new urls of hires photos for Carousel
-    # limit - 10 photos
-    photoObj = []
+
     i = 0
     for u in photo_ins:
-        if i >= 10:
+        if i >= 9:
             break        
-        tmpDict = {}
-        tmpDict["url"] = u.url
-        if u.url == image:
-            tmpDict["active"] = 1
-        else:
+        if u.url != image:
+            tmpDict = {}
+            tmpDict["url"] = u.url
             tmpDict["active"] = 0
-        tmpDict["url_min"] = u.url_min
-        tmpDict["title"] = u.title
-        tmpDict["place"] = u.place
-        tmpDict["keywords"] = u.keywords.all()
-        photoObj.append(tmpDict)
-        i += 1
+            tmpDict["url_min"] = u.url_min
+            tmpDict["title"] = u.title
+            tmpDict["place"] = u.place
+            tmpDict["keywords"] = u.keywords.all()
+            photoObj.append(tmpDict)
+            i += 1
     context = {
         "genre": genre_ins,
         "genre_active": genre,
