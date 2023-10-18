@@ -1,4 +1,4 @@
-from django.urls import path, re_path, include
+from django.urls import path, re_path
 from gallery import views
 
 prefix_photo = "DSC"
