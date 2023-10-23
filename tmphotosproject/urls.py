@@ -16,7 +16,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('managephotos/', include('managephotos.urls')),
     path('', include('gallery.urls')),
-    path('sitemap.xml', sitemap,  {'sitemaps': sitemaps}, 
+    path('sitemap.xml', sitemap,  {'sitemaps': sitemaps, 'template_name': 'managephotos/sitemap.xml'}, 
         name='django.contrib.sitemaps.views.sitemap',)
 ]
 

@@ -1,2 +1,5 @@
 User-agent: * 
+User-agent: AdsBot 
+Disallow: /managephotos/*
+
 Sitemap: https://tmphotos.ru/sitemap.xml
