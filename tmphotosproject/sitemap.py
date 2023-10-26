@@ -11,24 +11,23 @@ class PhotoSitemap(Sitemap):
     changefreq = "weekly"
 
     def items(self):
-      return Genre.objects.order_by("pk").all()
+      return Photo.objects.all()
     
     def location(self, item):
-      return '/%s/' % item.genre.replace(" ", "-").lower()
+      # genre for menu
+      genre_ins = item.genre.first()
+      genre = genre_ins.genre.replace(" ", "-").lower()
+      # photo friendly url
+      photo = (item.url).replace(".jpg", ".html")
+      return '/%s/%s' % (genre, photo)
     
     def lastmod(self, item):
-      date_list = []
-      photo_inst = Photo.objects.filter(genre = item.pk)
-      for image in photo_inst:
-        src = (image.src.path).split("/")
-        i = len(src)
-        # Date from path /Y/m/d/name_of_file
-        date_list.append(datetime.date(int(src[i-4]), int(src[i-3]), int(src[i-2])))
-      lastdate = datetime.date.min
-      for d in date_list:
-         if d > lastdate:
-            lastdate = d
-      return lastdate
+      # Get date from src of the uploaded file: upload_path = "photo/" + td.strftime("%Y/%m/%d/")
+      src = (item.src.path).split("/")
+      i = len(src)
+      # Date from path /Y/m/d/name_of_file
+      photo_date = datetime.date(int(src[i-4]), int(src[i-3]), int(src[i-2]))
+      return photo_date
 
     def __get(self, name, obj, default=None):
       try:
@@ -40,11 +39,10 @@ class PhotoSitemap(Sitemap):
       return attr
 
     def get_image (self, item):
-      photo_inst = Photo.objects.filter(genre = item.pk)
-      image_urls = []
-      for image in photo_inst:
-         image_urls.append(image.url)
-      return image_urls
+      # For common purpose get_image return list of urls
+      url = []
+      url.append(item.url)
+      return url
 
     def get_urls(self, page=1, site=None, protocol=None):
       # Determine protocol
@@ -91,9 +89,9 @@ class StaticSitemap(Sitemap):
     def location(self, item):
         return reverse(item)
     
-    def lastmod(self, item):
-      if item == "stocks":
-          delta = datetime.timedelta (days = 365)
-      else:
-          delta = datetime.timedelta (days = 14)
-      return datetime.date.today() - delta
+    # def lastmod(self, item):
+    #   if item == "stocks":
+    #       delta = datetime.timedelta (days = 365)
+    #   else:
+    #       delta = datetime.timedelta (days = 14)
+    #   return datetime.date.today() - delta
