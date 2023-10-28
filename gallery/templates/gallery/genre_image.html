@@ -1,5 +1,6 @@
 {% extends "gallery/base.html" %}
-{% block title %}TIMA PHOTOS - Home{% endblock %}
+{% block description %}TIMA PHOTOS - Genre:{{genre_active|capfirst}} - Title:{{photo_list.0.title}}{% endblock %}
+{% block title %} {{photo_list.0.title}} | {{genre_active|upper}} | TIMA PHOTOS{% endblock %}
 {% block menu %}
 <nav class="navbar navbar-expand d-md-none">
     <div class="container justify-content-center">
