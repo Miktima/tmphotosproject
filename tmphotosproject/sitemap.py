@@ -66,13 +66,18 @@ class PhotoSitemap(Sitemap):
       for item in self.paginator.page(page).object_list:
         loc = "%s://%s%s" % (protocol, domain, self.__get('location', item))
         priority = self.__get('priority', item, None)
+        # For common purpose get_image return list of urls
+        img_list = []
+        # Change .html to .jpg for images in sitemap
+        if loc.rfind(".html"):           
+          img_list.append(loc.replace(".html", ".jpg"))
         url_info = {
             'item':       item,
             'location':   loc,
             'lastmod':    self.__get('lastmod', item, None),
             'changefreq': self.__get('changefreq', item, None),
             'priority':   str(priority is not None and priority or ''),
-            'images'   :  self.get_image(item)
+            'images'   :  img_list
         }
         urls.append(url_info)
       return urls
