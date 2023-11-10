@@ -67,7 +67,7 @@ def genre(request, genre):
     genre_ins = Genre.objects.order_by("pk").all()
     # Select photo for genre_id
     reduced_genre = genre.replace("-", " ")
-    photo_ins = Photo.objects.order_by("?").filter(genre__genre__iexact=reduced_genre)
+    photo_ins = Photo.objects.order_by("-pk").filter(genre__genre__iexact=reduced_genre)
     # fill dict with new urls
     photoObj = []
     for u in photo_ins:        
@@ -77,15 +77,14 @@ def genre(request, genre):
         tmpDict["title"] = u.title
         photoObj.append(tmpDict)
     # 9 photos at the page
-    # paginator = Paginator(photo_ins, 9)
     paginator = Paginator(photoObj, 9)
     page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)    
+    page_obj = paginator.get_page(page_number)
     # print("view.genre:", genre)
     context = {
         "genre": genre_ins,
         "genre_active": genre,
-        "page_obj": page_obj
+        "page_obj": page_obj,
     }
     return render(request, 'gallery/genre.html', context)    
 

@@ -11,7 +11,7 @@ class PhotoSitemap(Sitemap):
     changefreq = "weekly"
 
     def items(self):
-      return Photo.objects.all()
+      return Photo.objects.order_by("pk").all()
     
     def location(self, item):
       # genre for menu
