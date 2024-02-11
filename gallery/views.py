@@ -39,9 +39,13 @@ def home(request):
             i += 1
         else:
             tmpDict["active"] = 0
+        # mask for stars: 1 - fill star, 0 - half star, -1 - empty star
+        starmask = photo_ch.star * [1] + (5 - photo_ch.star) * [-1]
         tmpDict["url_min"] = photo_ch.url_min
         tmpDict["title"] = photo_ch.title
         tmpDict["place"] = photo_ch.place
+        tmpDict["stars"] = starmask
+        tmpDict["photoid"] = u
         tmpDict["keywords"] = photo_ch.keywords.all()
         photoObj.append(tmpDict)
     context = {
