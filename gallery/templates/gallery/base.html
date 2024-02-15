@@ -8,7 +8,7 @@
     <meta name="description" content="{% block description %}TIMA PHOTOS{% endblock %}">
     <!--<link href="{% static 'tmphotosproject/bootstrap.min.css' %}" rel="stylesheet">-->
     <link href="{% static 'tmphotosproject/custom.css' %}" rel="stylesheet">
-    <script src="{% static 'tmphotosproject/jquery-3.7.1.min.js' %}"></script>    
+    <script src="{% static 'tmphotosproject/jquery-3.6.3.min.js' %}"></script>    
     <script src="{% static 'tmphotosproject/bootstrap.min.js' %}"></script>    
     <link rel="icon" href="{% static 'tmphotosproject/img/favicon.svg' %}" type="image/svg">
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -46,5 +46,26 @@
             <div class="col-md-10 mt-2">{% block img %}{% endblock %}</div>
         </div> 
     </div>
+    <script type="text/javascript">
+        function sendStar (el) { 
+            console.log(el.id)
+            $.ajax({
+                type:'POST',
+                url:'{% url "save_star" %}',
+                data:
+                {
+                    star: el.id,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success:function(){
+                    console.log("Success");
+                },
+                error: function(xhr, errmsg, err) {
+                    console.log("Status: " + xhr.status + "ERROR:" + xhr.error + " " + errmsg + " " + err); 
+                },                            
+            });
+
+        }
+    </script>
 </body>
 </html>

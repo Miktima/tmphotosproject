@@ -154,3 +154,10 @@ def error404(request, exception):
     response = render(request, 'gallery/404.html', context)
     response.status_code = 404
     return response
+
+def save_star(request):
+    if request.method == 'POST':
+        print (request.POST['star'])
+        return HttpResponse("OK")
+    else:
+        return render(request, 'gallery/index.html')
