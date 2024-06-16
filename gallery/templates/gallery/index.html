@@ -48,7 +48,7 @@
         <div class="carousel-item {% if photo.active == 1 %}active{% endif %}">
             <figure class="figure">
                 <img src="{% url 'url_image' photo.url %}" class="img-fluid rounded figure-img" alt="{{photo.title}}"> 
-                <figcaption class="figure-caption text-end z-2">
+                <blockquote class="blockquote">
                     <p class="text-secondary">
                         {% for star in photo.stars %}
                         {% if star == 1 %}
@@ -72,7 +72,9 @@
                         {% endif %}
                         {% endfor %}
                     </p>
-                    <h6>
+                </blockquote>
+                <figcaption class="figure-caption text-end">
+                        <h6>
                         {{photo.title}}{% if photo.place %} &#124; {{photo.place}}{% endif %}
                     </h6>
                     <p class="text-secondary">{% for k in photo.keywords %}<small>#{{k}} </small>{% endfor %}</p>

@@ -8,6 +8,7 @@
     <meta name="description" content="{% block description %}TIMA PHOTOS{% endblock %}">
     <!--<link href="{% static 'tmphotosproject/bootstrap.min.css' %}" rel="stylesheet">-->
     <link href="{% static 'tmphotosproject/custom.css' %}" rel="stylesheet">
+    <link href="{% static 'tmphotosproject/animstyle.css' %}" rel="stylesheet">
     <script src="{% static 'tmphotosproject/jquery-3.6.3.min.js' %}"></script>    
     <script src="{% static 'tmphotosproject/bootstrap.min.js' %}"></script>    
     <link rel="icon" href="{% static 'tmphotosproject/img/favicon.svg' %}" type="image/svg">
@@ -48,7 +49,6 @@
     </div>
     <script type="text/javascript">
         function sendStar (el) { 
-            console.log(el.id)
             $.ajax({
                 type:'POST',
                 url:'{% url "save_star" %}',
@@ -58,7 +58,8 @@
                     csrfmiddlewaretoken: '{{ csrf_token }}'
                 },
                 success:function(){
-                    console.log("Success");
+                    console.log("Success:"+el.id);
+                    $("#"+el.id).children('svg').addClass("bounce2");
                 },
                 error: function(xhr, errmsg, err) {
                     console.log("Status: " + xhr.status + "ERROR:" + xhr.error + " " + errmsg + " " + err); 

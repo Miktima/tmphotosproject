@@ -6187,7 +6187,7 @@ textarea.form-control-lg {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 5%;
+  width: 10%;
   padding: 0;
   color: #adb5bd;
   text-align: center;
@@ -6254,9 +6254,9 @@ textarea.form-control-lg {
   display: flex;
   justify-content: center;
   padding: 0;
-  margin-right: 5%;
+  margin-right: 10%;
   margin-bottom: 1rem;
-  margin-left: 5%;
+  margin-left: 10%;
 }
 .carousel-indicators [data-bs-target] {
   box-sizing: content-box;
@@ -6268,7 +6268,7 @@ textarea.form-control-lg {
   margin-left: 3px;
   text-indent: -999px;
   cursor: pointer;
-  background-color: #0d6efd;
+  background-color: #adb5bd;
   background-clip: padding-box;
   border: 0;
   border-top: 10px solid transparent;
@@ -6292,7 +6292,7 @@ textarea.form-control-lg {
   left: 15%;
   padding-top: 1.25rem;
   padding-bottom: 1.25rem;
-  color: #dc3545;
+  color: #adb5bd;
   text-align: center;
 }
 
