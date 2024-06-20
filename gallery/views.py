@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.core.paginator import Paginator
 from django.urls import reverse
-from managephotos.models import Genre, Photo
+from managephotos.models import Genre, Photo, Pubstars
 import random
 
 def home(request):
@@ -157,7 +157,16 @@ def error404(request, exception):
 
 def save_star(request):
     if request.method == 'POST':
-        print (request.POST['star'])
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[-1].strip()
+        else:
+            ip = request.META.get('REMOTE_ADDR')      
+        phandst = (request.POST['star']).split("__")
+        Pubstars.ip = ip
+        Pubstars.star = int(phandst[1])
+        Pubstars.photoid = int(phandst[1])
+        Pubstars.save()
         return HttpResponse("OK")
     else:
         return render(request, 'gallery/index.html')

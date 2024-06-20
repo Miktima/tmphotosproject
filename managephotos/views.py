@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.list import ListView
 from .forms import PhotoForm, KeywordsForm, PhotoEditForm, KeywordsEditForm
-from .models import Genre, Photo, Keywords
+from .models import Genre, Photo, Keywords, Pubstars
 from django.contrib import messages
 from django.urls import reverse
 from .MpClass import MpClass
@@ -131,5 +131,7 @@ def remove_photo(request, photo_id):
 	os.remove(photo_instance.src_min.path)
 	# и удаляем запись
 	photo_instance.delete()
+	# !!! remove from Pubstars !!!
+	Pubstars.objects.filter(photoid=photo_id).delete()
 	return redirect(reverse("index"))
 

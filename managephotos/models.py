@@ -26,4 +26,10 @@ class Photo(models.Model):
 	def __str__(self):
 		return self.title	
 
-# class Pubstars(models.Model):
+class Pubstars(models.Model):
+	ipaddress = models.GenericIPAddressField()
+	dtime = models.DateTimeField(auto_now_add=True)
+	star = models.PositiveSmallIntegerField()
+	photoid = models.PositiveIntegerField()
+	def __str__(self):
+		return self.photoid	

@@ -60,6 +60,12 @@
                 success:function(){
                     console.log("Success:"+el.id);
                     $("#"+el.id).children('svg').addClass("bounce2");
+                    let idphoto = (el.id).slice(0,(el.id).indexOf("_"));
+                    for (let i = 0; i <= 5; i++) {
+                        $("#"+idphoto+"__"+i).removeAttr("style");
+                        $("#"+idphoto+"__"+i).removeAttr("onclick");
+                    }
+                    setTimeout(() => { $("#"+el.id).children('svg').removeClass("bounce2"); }, 2000);
                 },
                 error: function(xhr, errmsg, err) {
                     console.log("Status: " + xhr.status + "ERROR:" + xhr.error + " " + errmsg + " " + err); 
