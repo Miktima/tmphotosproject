@@ -31,5 +31,5 @@ class Pubstars(models.Model):
 	dtime = models.DateTimeField(auto_now_add=True)
 	star = models.PositiveSmallIntegerField()
 	photoid = models.PositiveIntegerField()
-	def __str__(self):
+	def __int__(self):
 		return self.photoid	

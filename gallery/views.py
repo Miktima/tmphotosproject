@@ -163,10 +163,11 @@ def save_star(request):
         else:
             ip = request.META.get('REMOTE_ADDR')      
         phandst = (request.POST['star']).split("__")
-        Pubstars.ip = ip
-        Pubstars.star = int(phandst[1])
-        Pubstars.photoid = int(phandst[1])
-        Pubstars.save()
+        pubstar = Pubstars()
+        pubstar.ipaddress = ip
+        pubstar.star = int(phandst[1])
+        pubstar.photoid = int(phandst[0])
+        pubstar.save()
         return HttpResponse("OK")
     else:
         return render(request, 'gallery/index.html')
