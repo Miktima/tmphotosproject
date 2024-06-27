@@ -3,7 +3,9 @@ from django.http import HttpResponse
 from django.core.paginator import Paginator
 from django.urls import reverse
 from managephotos.models import Genre, Photo, Pubstars
+from django.db.models import Avg
 import random
+import math
 
 def home(request):
     # Select genres
@@ -39,8 +41,14 @@ def home(request):
             i += 1
         else:
             tmpDict["active"] = 0
+        # Среднее по публичному голосованию, если результатов нет, то возвращаем, то, что присвоено фотографии
+        avgPubstars = Pubstars.objects.filter(photoid=u).aggregate(Avg("star", default=photo_ch.star))
+        avgStars = (avgPubstars['star__avg'] + photo_ch.star)/2
         # mask for stars: 1 - fill star, 0 - half star, -1 - empty star
-        starmask = photo_ch.star * [1] + (5 - photo_ch.star) * [-1]
+        # starmask = photo_ch.star * [1] + (5 - photo_ch.star) * [-1]
+        starmask = math.floor(avgStars) * [1] + \
+            (math.ceil(avgStars) - math.floor(avgStars)) * [0] + \
+            (5 - math.ceil(avgStars)) * [-1]
         tmpDict["url_min"] = photo_ch.url_min
         tmpDict["title"] = photo_ch.title
         tmpDict["place"] = photo_ch.place
@@ -92,7 +100,7 @@ def genre(request, genre):
     }
     return render(request, 'gallery/genre.html', context)    
 
-def genre_image(request, genre, image):
+def genre_image_old(request, genre, image): #OBSOLETE
     # Select genres
     genre_ins = Genre.objects.order_by("pk").all()
     # Change from html to jpg suffix, if html suffix occurs
@@ -134,6 +142,39 @@ def genre_image(request, genre, image):
         "genre_active": genre,
         # "photo": photo_instance,
         "photo_list": photoObj
+    }
+    return render(request, 'gallery/genre_image.html', context)    
+
+def genre_image(request, genre, image):
+    # Select genres
+    genre_ins = Genre.objects.order_by("pk").all()
+    # Change from html to jpg suffix, if html suffix occurs
+    if ".html" in image:
+        image = image.replace(".html", ".jpg")
+
+    # select choosen photo
+    photo_instance = get_object_or_404(Photo, url=image)
+    photoDict = {}
+    photoDict["url"] = photo_instance.url
+    photoDict["url_min"] = photo_instance.url_min
+    photoDict["title"] = photo_instance.title
+    photoDict["place"] = photo_instance.place
+    photoDict["photoid"] = photo_instance.pk
+    photoDict["keywords"] = photo_instance.keywords.all()
+    # Среднее по публичному голосованию, если результатов нет, то возвращаем, то, что присвоено фотографии
+    avgPubstars = Pubstars.objects.filter(photoid=photo_instance.pk).aggregate(Avg("star", default=photo_instance.star))    
+    avgStars = (avgPubstars['star__avg'] + photo_instance.star)/2
+    # mask for stars: 1 - fill star, 0 - half star, -1 - empty star
+    starmask = math.floor(avgStars) * [1] + \
+            (math.ceil(avgStars) - math.floor(avgStars)) * [0] + \
+            (5 - math.ceil(avgStars)) * [-1]
+    photoDict["stars"] = starmask
+
+    context = {
+        "genre": genre_ins,
+        "genre_active": genre,
+        # "photo": photo_instance,
+        "photo": photoDict
     }
     return render(request, 'gallery/genre_image.html', context)    
 
