@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.core.paginator import Paginator
 from django.urls import reverse
 from managephotos.models import Genre, Photo, Pubstars
@@ -79,6 +79,10 @@ def genre(request, genre):
     genre_ins = Genre.objects.order_by("pk").all()
     # Select photo for genre_id
     reduced_genre = genre.replace("-", " ")
+    try:
+        genre_instance = Genre.objects.get(genre=reduced_genre)
+    except Genre.DoesNotExist:
+        raise Http404("No Genre matches!")
     photo_ins = Photo.objects.order_by("-pk").filter(genre__genre__iexact=reduced_genre)
     # fill dict with new urls
     photoObj = []
@@ -162,7 +166,8 @@ def genre_image(request, genre, image):
     photoDict["photoid"] = photo_instance.pk
     photoDict["keywords"] = photo_instance.keywords.all()
     # Среднее по публичному голосованию, если результатов нет, то возвращаем, то, что присвоено фотографии
-    avgPubstars = Pubstars.objects.filter(photoid=photo_instance.pk).aggregate(Avg("star", default=photo_instance.star))    
+    avgPubstars = Pubstars.objects.filter(photoid=photo_instance.pk).aggregate(Avg("star", default=photo_instance.star))
+    print ("Stars (pub + own):", avgPubstars['star__avg'], photo_instance.star)
     avgStars = (avgPubstars['star__avg'] + photo_instance.star)/2
     # mask for stars: 1 - fill star, 0 - half star, -1 - empty star
     starmask = math.floor(avgStars) * [1] + \
