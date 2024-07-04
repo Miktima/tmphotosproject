@@ -1,5 +1,6 @@
 from django.test import TestCase
-from managephotos.models import Genre, Keywords, Photo
+from managephotos.models import Genre, Keywords, Photo, Pubstars
+from django.db.models import Avg
 from django.core.files import File
 import random
 import string
@@ -72,6 +73,14 @@ class GalleryIndexViewTests(TestCase):
                         kwargs={'url_image': p.url}))
             # test status code
             self.assertEqual(response.status_code, 200)
+        # test for 404 error
+        photo_rnd = Photo.objects.order_by('?').first()
+        revurl = reverse('url_image', kwargs={'url_image': photo_rnd.url})
+        # remove center letter
+        revurl = revurl[:int(len(revurl)/2)] + revurl[int(len(revurl)/2)+1:]
+        # check response
+        response = self.client.get(revurl)
+        self.assertEqual(response.status_code, 404)
 
     def test_image_tmb_url(self):
         # test friendly urls of thumbnails
@@ -81,6 +90,14 @@ class GalleryIndexViewTests(TestCase):
                         kwargs={'url_tmb': p.url_min}))
             # test status code
             self.assertEqual(response.status_code, 200)
+        # test for 404 error
+        photo_rnd = Photo.objects.order_by('?').first()
+        revurl = reverse('image_tmb_url', kwargs={'url_tmb': photo_rnd.url_min})
+        # remove center letter
+        revurl = revurl[:int(len(revurl)/2)] + revurl[int(len(revurl)/2)+1:]
+        # check response
+        response = self.client.get(revurl)
+        self.assertEqual(response.status_code, 404)
 
     def test_stocks_page(self):
         # test stocks page
@@ -104,6 +121,22 @@ class GalleryIndexViewTests(TestCase):
                         kwargs={'genre': link_genre, 'image': p.url}))
                 # test status code
                 self.assertEqual(response.status_code, 200)
+        # test for 404 error
+        # pure genre
+        genre_rnd = Genre.objects.order_by('?').first()
+        link_genre = genre_rnd.genre.lower()
+        link_genre = link_genre.replace(' ', '-')
+        # remove center letter
+        url404 = link_genre[:int(len(link_genre)/2)] + link_genre[int(len(link_genre)/2)+1:]
+        # check response
+        response = self.client.get(url404)
+        self.assertEqual(response.status_code, 404)
+        # genre with image
+        photo_rnd = Photo.objects.order_by('?').first()
+        url404i = reverse('genre_image', kwargs={'genre': link_genre, 'image': photo_rnd.url})
+        url404i = link_genre[:int(len(url404i)/2)] + link_genre[int(len(url404i)/2)+1:]
+        response = self.client.get(url404i)
+        self.assertEqual(response.status_code, 404)
 
     def test_genre(self):
         # test genre page with a hires image
@@ -126,3 +159,42 @@ class GalleryIndexViewTests(TestCase):
                 self.assertTrue(resp2.context['is_paginated'] == True)
                 # must be 2 photos or more
                 self.assertGreaterEqual(len(response.context['page_obj']), 2)
+    
+    def test_stars(self):
+        # test internal and public stars
+        photo_rnd = Photo.objects.order_by('?').first()
+        genre_ins = photo_rnd.genre.first()
+        pkphoto = photo_rnd.pk
+        link_genre = genre_ins.genre.lower()
+        link_genre = link_genre.replace(' ', '-')
+        # internal stars
+        url = reverse('genre_image', kwargs={'genre': link_genre, 'image': photo_rnd.url})
+        int_stars = photo_rnd.star
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        photo = response.context["photo"]
+        n1 = (photo["stars"]).count(1)
+        self.assertEqual(n1, int_stars)
+        # 5 public stars
+        for i in range(5):
+            # add public star
+            rnd_star = random.randrange(1, 5)
+            payload = str(pkphoto) + "__" + str(rnd_star)
+            response = self.client.post('/save_star.html', {'star': payload})
+            self.assertEqual(response.status_code, 200)
+            # get image
+            url = reverse('genre_image', kwargs={'genre': link_genre, 'image': photo_rnd.url})
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, 200)           
+            # check internal stars and public star
+            photo = response.context["photo"]
+            n1 = (photo["stars"]).count(1)
+            n0 = (photo["stars"]).count(0)
+            # Среднее по публичному голосованию, если результатов нет, то возвращаем, то, что присвоено фотографии
+            avgPubstars = Pubstars.objects.filter(photoid=photo_rnd.pk).aggregate(Avg("star", default=photo_rnd.star))
+            avgStars = (avgPubstars['star__avg'] + photo_rnd.star)/2
+            if n0 > 0:
+                self.assertLess(n1, avgStars)
+            else:
+                self.assertEqual(n1, avgStars)
+            self.assertGreater(n1+1, avgStars)

@@ -167,7 +167,7 @@ def genre_image(request, genre, image):
     photoDict["keywords"] = photo_instance.keywords.all()
     # Среднее по публичному голосованию, если результатов нет, то возвращаем, то, что присвоено фотографии
     avgPubstars = Pubstars.objects.filter(photoid=photo_instance.pk).aggregate(Avg("star", default=photo_instance.star))
-    print ("Stars (pub + own):", avgPubstars['star__avg'], photo_instance.star)
+    #print ("Stars (pub + own):", avgPubstars['star__avg'], photo_instance.star)
     avgStars = (avgPubstars['star__avg'] + photo_instance.star)/2
     # mask for stars: 1 - fill star, 0 - half star, -1 - empty star
     starmask = math.floor(avgStars) * [1] + \
