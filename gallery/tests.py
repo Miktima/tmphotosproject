@@ -192,7 +192,10 @@ class GalleryIndexViewTests(TestCase):
             n0 = (photo["stars"]).count(0)
             # Среднее по публичному голосованию, если результатов нет, то возвращаем, то, что присвоено фотографии
             avgPubstars = Pubstars.objects.filter(photoid=photo_rnd.pk).aggregate(Avg("star", default=photo_rnd.star))
-            avgStars = (avgPubstars['star__avg'] + photo_rnd.star)/2
+            avgpub = avgPubstars['star__avg']
+            if avgPubstars['star__avg'] == None:
+                avgpub = photo_rnd.star
+            avgStars = (avgpub + photo_rnd.star)/2
             if n0 > 0:
                 self.assertLess(n1, avgStars)
             else:
