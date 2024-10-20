@@ -46,6 +46,20 @@
 </nav>
 {% endblock %}
 {% block img %}
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org/",
+        "@type": "ImageObject",
+        "contentUrl": "{% url 'url_image' photo.url %}",
+        "license": "https://creativecommons.org/licenses/by/4.0/",
+        "creditText": "Tima",
+        "creator": {
+            "@type": "Person",
+            "name": "Mikhail Timofeev"
+        },
+        "keywords": "{% for k in photo.keywords %}{{k}}, {% endfor %}"{% if photo.place %}, "contentLocation": "{{photo.place}}"{% endif %}
+    }
+</script>
 <figure class="figure">
     <img src="{% url 'url_image' photo.url %}" class="img-fluid rounded figure-img" alt="{{photo.title}}"> 
     <blockquote class="blockquote">

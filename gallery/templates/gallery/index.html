@@ -42,6 +42,24 @@
 </nav>
 {% endblock %}
 {% block img %}
+<script type="application/ld+json">
+    [
+    {% for photo in rnd_photo %}
+        {
+            "@context": "https://schema.org/",
+            "@type": "ImageObject",
+            "contentUrl": "{% url 'url_image' photo.url %}",
+            "license": "https://creativecommons.org/licenses/by/4.0/",
+            "creditText": "Tima",
+            "creator": {
+                "@type": "Person",
+                "name": "Mikhail Timofeev"
+            },
+            "keywords": "{% for k in photo.keywords %}{{k}}, {% endfor %}"{% if photo.place %}, "contentLocation": "{{photo.place}}"{% endif %}
+        }
+    {% endfor %}
+    ]
+</script>
 <div id="carouselHome" class="carousel slide">
     <div class="carousel-inner">
         {% for photo in rnd_photo %}
