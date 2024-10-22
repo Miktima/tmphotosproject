@@ -50,14 +50,14 @@
     {
         "@context": "https://schema.org/",
         "@type": "ImageObject",
-        "contentUrl": "{% url 'url_image' photo.url %}",
+        "contentUrl": "https://tmphotos.ru{% url 'genre_menu' genre_active|slugify %}{% url 'url_image' photo.url %}",
         "license": "https://creativecommons.org/licenses/by/4.0/",
         "creditText": "Tima",
         "creator": {
             "@type": "Person",
             "name": "Mikhail Timofeev"
         },
-        "keywords": "{% for k in photo.keywords %}{{k}}, {% endfor %}"{% if photo.place %}, "contentLocation": "{{photo.place}}"{% endif %}
+        "keywords": "{% for k in photo.keywords %}{{k}}{% if forloop.last is not True%}, {%endif%}{% endfor %}"{% if photo.place %}, "contentLocation": "{{photo.place}}"{% endif %}
     }
 </script>
 <figure class="figure">

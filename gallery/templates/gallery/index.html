@@ -55,8 +55,8 @@
                 "@type": "Person",
                 "name": "Mikhail Timofeev"
             },
-            "keywords": "{% for k in photo.keywords %}{{k}}, {% endfor %}"{% if photo.place %}, "contentLocation": "{{photo.place}}"{% endif %}
-        }
+            "keywords": "{% for k in photo.keywords %}{{k}}{% if forloop.last is not True%}, {%endif%}{% endfor %}"{% if photo.place %}, "contentLocation": "{{photo.place}}"{% endif %}
+        }{% if forloop.last is not True%},{%endif%}
     {% endfor %}
     ]
 </script>
