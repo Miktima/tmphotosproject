@@ -52,10 +52,13 @@ class PhotoSitemap(Sitemap):
         protocol = 'http'
 
       # Determine domain
+      # Site.objects.clear_site_cache()
+
       if site is None:
         if Site._meta.installed:
             try:
                 site = Site.objects.get_current()
+                site.refresh_from_db()
             except Site.DoesNotExist:
                 pass
         if site is None:
