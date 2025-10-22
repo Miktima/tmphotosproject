@@ -60,6 +60,7 @@
         "keywords": "{% for k in photo.keywords %}{{k}}{% if forloop.last is not True%}, {%endif%}{% endfor %}"{% if photo.place %}, "contentLocation": "{{photo.place}}"{% endif %}
     }
 </script>
+<div class="fullpage"></div>
 <figure class="figure">
     <img src="{% url 'url_image' photo.url %}" class="img-fluid rounded figure-img" alt="{{photo.title}}"> 
     <blockquote class="blockquote">
@@ -94,4 +95,21 @@
         <p class="text-secondary">{% for k in photo.keywords %}<small>#{{k}} </small>{% endfor %}</p>
     </figcaption>
 </figure>
+<script type="text/javascript">
+    const imgs = document.querySelectorAll('.figure img');
+    const fullPage = document.querySelector('.fullpage');
+    imgs.forEach(img => {
+        img.addEventListener('click', function() {
+            fullPage.style.backgroundImage = 'url(' + img.src + ')';
+            window.scrollTo(0, 0);
+            fullPage.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        });
+    });
+    fullPage.onclick = function() {
+        fullPage.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    };
+</script>
+
 {%endblock %}

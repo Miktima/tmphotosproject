@@ -11,3 +11,5 @@ tmphotosproject/key.txt
 tmphotosproject/db.txt
 tmphotosproject/static.txt
 static/
+gallery/migrations/__pycache__/
+managephotos/migrations/__pycache__/
