@@ -1,6 +1,6 @@
 {% extends "gallery/base.html" %}
 {% block description %}TIMA PHOTOS - Genre:{{genre_active|capfirst}} - Title:{{photo_list.0.title}}{% endblock %}
-{% block title %} {{photo_list.0.title}} | {{genre_active|upper}} | TIMA PHOTOS{% endblock %}
+{% block title %} {{photo.title}} - {{genre_active|capfirst}} - TIMA PHOTOS{% endblock %}
 {% block menu %}
 <nav class="navbar navbar-expand d-md-none">
     <div class="container justify-content-center">
@@ -60,9 +60,10 @@
         "keywords": "{% for k in photo.keywords %}{{k}}{% if forloop.last is not True%}, {%endif%}{% endfor %}"{% if photo.place %}, "contentLocation": "{{photo.place}}"{% endif %}
     }
 </script>
-<div class="fullpage"></div>
 <figure class="figure">
-    <img src="{% url 'url_image' photo.url %}" class="img-fluid rounded figure-img" alt="{{photo.title}}"> 
+    <div data-bs-toggle="modal" data-bs-target="#imgModal">
+        <img src="{% url 'url_image' photo.url %}" class="img-fluid rounded figure-img" alt="{{photo.title}}">
+    </div>
     <blockquote class="blockquote">
         <p class="text-secondary">
             {% for star in photo.stars %}
@@ -95,21 +96,19 @@
         <p class="text-secondary">{% for k in photo.keywords %}<small>#{{k}} </small>{% endfor %}</p>
     </figcaption>
 </figure>
-<script type="text/javascript">
-    const imgs = document.querySelectorAll('.figure img');
-    const fullPage = document.querySelector('.fullpage');
-    imgs.forEach(img => {
-        img.addEventListener('click', function() {
-            fullPage.style.backgroundImage = 'url(' + img.src + ')';
-            window.scrollTo(0, 0);
-            fullPage.style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        });
-    });
-    fullPage.onclick = function() {
-        fullPage.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    };
-</script>
+<!-- Modal -->
+<div class="modal fade" id="imgModal" tabindex="-1" aria-labelledby="imgModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 id="imgModalLabel" class="text-secondary">{{photo.title}}</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <img src="{% url 'url_image' photo.url %}" class="img-fluid" alt="{{photo.title}}">
+      </div>
+    </div>
+  </div>
+</div>
 
 {%endblock %}

@@ -68,14 +68,24 @@ def home(request):
 def image_url(request, url_image):
     # Берем значение записи из таблицы photo 
     # print("image_url: ", url_image)
+    content_type = "application/octet-stream"
+    if ".jpg" in url_image or ".jpeg" in url_image:
+        content_type = "image/jpeg"
+    elif ".png" in url_image:
+        content_type = "image/png"
     photo_instance = get_object_or_404(Photo, url=url_image)
-    return HttpResponse(photo_instance.src)
+    return HttpResponse(photo_instance.src, content_type=content_type)
 
 def image_tmb_url(request, url_tmb):
     # Берем значение записи из таблицы photo 
     # print("image_url_min: ", url_tmb)
+    content_type = "application/octet-stream"
+    if ".jpg" in url_tmb or ".jpeg" in url_tmb:
+        content_type = "image/jpeg"
+    elif ".png" in url_tmb:
+        content_type = "image/png"
     photo_instance = get_object_or_404(Photo, url_min=url_tmb)
-    return HttpResponse(photo_instance.src_min)
+    return HttpResponse(photo_instance.src_min, content_type=content_type)
 
 def genre(request, genre):
     # Select genres
