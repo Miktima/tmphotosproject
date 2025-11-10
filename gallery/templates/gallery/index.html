@@ -1,6 +1,17 @@
 {% extends "gallery/base.html" %}
 {% block description %}TIMA PHOTOS - Home{% endblock %}
 {% block title %}HOME - TIMA PHOTOS{% endblock %}
+{% block og-tags %}
+<meta property="og:title" content="TIMA PHOTOS">
+<meta property="og:description" content="TIMA PHOTOS">
+<meta property="og:image" content="https://{{current_site}}{% url 'url_image' rnd_photo.0.url %}">
+<meta property="og:url" content="https://{{current_site}}">
+<meta property="og:type" content="website">
+<meta property="twitter:card" content="TIMA PHOTOS">
+<meta property="twitter:title" content="TIMA PHOTOS">
+<meta property="twitter:description" content="TIMA PHOTOS TIMA PHOTOS">
+<meta property="twitter:image" content="https://{{current_site}}{% url 'url_image' rnd_photo.0.url %}">
+{% endblock %}
 {% block menu %}
 <nav class="navbar navbar-expand d-md-none">
     <div class="container justify-content-center">
@@ -42,24 +53,6 @@
 </nav>
 {% endblock %}
 {% block img %}
-<script type="application/ld+json">
-    [
-    {% for photo in rnd_photo %}
-        {
-            "@context": "https://schema.org/",
-            "@type": "ImageObject",
-            "contentUrl": "{% url 'url_image' photo.url %}",
-            "license": "https://creativecommons.org/licenses/by/4.0/",
-            "creditText": "Tima",
-            "creator": {
-                "@type": "Person",
-                "name": "Mikhail Timofeev"
-            },
-            "keywords": "{% for k in photo.keywords %}{{k}}{% if forloop.last is not True%}, {%endif%}{% endfor %}"{% if photo.place %}, "contentLocation": "{{photo.place}}"{% endif %}
-        }{% if forloop.last is not True%},{%endif%}
-    {% endfor %}
-    ]
-</script>
 <div id="carouselHome" class="carousel slide">
     <div class="carousel-inner">
         {% for photo in rnd_photo %}

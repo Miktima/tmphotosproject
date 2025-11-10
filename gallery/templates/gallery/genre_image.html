@@ -1,6 +1,17 @@
 {% extends "gallery/base.html" %}
-{% block description %}TIMA PHOTOS - Genre:{{genre_active|capfirst}} - Title:{{photo_list.0.title}}{% endblock %}
+{% block description %}TIMA PHOTOS - Genre:{{genre_active|capfirst}} - Title:{{photo.title}}{% endblock %}
 {% block title %} {{photo.title}} - {{genre_active|capfirst}} - TIMA PHOTOS{% endblock %}
+{% block og-tags %}
+<meta property="og:title" content="{{photo.title}}">
+<meta property="og:description" content="TIMA PHOTOS - Genre:{{genre_active|capfirst}} - Title:{{photo.title}}">
+<meta property="og:image" content="https://{{current_site}}{% url 'url_image' photo.url %}">
+<meta property="og:url" content="https://{{current_site}}{{ request.path }}">
+<meta property="og:type" content="website">
+<meta property="twitter:card" content="{{photo.title}}">
+<meta property="twitter:title" content="{{photo.title}}">
+<meta property="twitter:description" content="TIMA PHOTOS - Genre:{{genre_active|capfirst}} - Title:{{photo.title}}">
+<meta property="twitter:image" content="https://{{current_site}}{% url 'url_image' photo.url %}">
+{% endblock %}
 {% block menu %}
 <nav class="navbar navbar-expand d-md-none">
     <div class="container justify-content-center">
@@ -50,7 +61,7 @@
     {
         "@context": "https://schema.org/",
         "@type": "ImageObject",
-        "contentUrl": "https://tmphotos.ru{% url 'genre_menu' genre_active|slugify %}{% url 'url_image' photo.url %}",
+        "contentUrl": "https://{{current_site}}{% url 'genre_menu' genre_active|slugify %}{% url 'url_image' photo.url %}",
         "license": "https://creativecommons.org/licenses/by/4.0/",
         "creditText": "Tima",
         "creator": {

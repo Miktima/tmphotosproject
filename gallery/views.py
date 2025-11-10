@@ -4,6 +4,7 @@ from django.core.paginator import Paginator
 from django.urls import reverse
 from managephotos.models import Genre, Photo, Pubstars
 from django.db.models import Avg
+from django.contrib.sites.models import Site
 import random
 import math
 
@@ -59,9 +60,11 @@ def home(request):
         tmpDict["photoid"] = u
         tmpDict["keywords"] = photo_ch.keywords.all()
         photoObj.append(tmpDict)
+    current_site = Site.objects.get_current()
     context = {
         "genre": genre_ins,
-        "rnd_photo": photoObj
+        "rnd_photo": photoObj,
+        "current_site": current_site
     }
     return render(request, 'gallery/index.html', context)
 
@@ -189,12 +192,14 @@ def genre_image(request, genre, image):
             (math.ceil(avgStars) - math.floor(avgStars)) * [0] + \
             (5 - math.ceil(avgStars)) * [-1]
     photoDict["stars"] = starmask
+    current_site = Site.objects.get_current()
 
     context = {
         "genre": genre_ins,
         "genre_active": genre,
         # "photo": photo_instance,
-        "photo": photoDict
+        "photo": photoDict,
+        "current_site": current_site
     }
     return render(request, 'gallery/genre_image.html', context)    
 
