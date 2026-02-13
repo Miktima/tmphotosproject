@@ -5,6 +5,7 @@ from django.urls import reverse
 from managephotos.models import Genre, Photo, Pubstars
 from django.db.models import Avg
 from django.contrib.sites.models import Site
+from django.shortcuts import redirect
 import random
 import math
 
@@ -236,4 +237,4 @@ def save_star(request):
         pubstar.save()
         return HttpResponse("OK")
     else:
-        return render(request, 'gallery/index.html')
+        return redirect("home", permanent=True)
