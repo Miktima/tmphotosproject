@@ -13,3 +13,4 @@ tmphotosproject/static.txt
 static/
 gallery/migrations/__pycache__/
 managephotos/migrations/__pycache__/
+CLAUDE.md

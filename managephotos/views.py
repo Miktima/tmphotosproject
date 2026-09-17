@@ -7,6 +7,7 @@ from django.urls import reverse
 from .MpClass import MpClass
 from django.core.paginator import Paginator
 import os
+from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
@@ -85,7 +86,9 @@ def edit_photo(request, photo_id):
 				keywords = form_keywords.cleaned_data["keywords_bulk"]
 				if keywords != "":
 					keywords_list = keywords.split(",")
-					photo_row = Photo.objects.last()
+					# Привязываем keywords именно к редактируемой фотографии,
+					# а не к последней в БД (Photo.objects.last() — баг)
+					photo_row = photo_instance
 					for kword in keywords_list:
 						kw = kword.strip()
 						kw_obj, created = Keywords.objects.get_or_create(keyword = kw)
@@ -122,16 +125,24 @@ def edit_photo(request, photo_id):
 		}
 		return render(request, 'managephotos/edit_photo.html', context=context)
 
-@login_required	
+@login_required
+@require_POST
 def remove_photo(request, photo_id):
-	# Берем значение записи из таблицы photo 
+	# Берем значение записи из таблицы photo
 	photo_instance = get_object_or_404(Photo, pk=photo_id)
-	# Удаляем файлы 
-	os.remove(photo_instance.src.path)
-	os.remove(photo_instance.src_min.path)
-	# и удаляем запись
-	photo_instance.delete()
-	# !!! remove from Pubstars !!!
+	# Сохраняем пути к файлам до удаления записи
+	# (photo_instance.delete() затирает поля объекта, включая src.path)
+	photo_paths = (photo_instance.src.path, photo_instance.src_min.path)
+	# Удаляем публичные оценки (photoid не FK — каскада в БД нет)
 	Pubstars.objects.filter(photoid=photo_id).delete()
+	# Удаляем запись первой: если что-то пойдёт не так, файлы не пострадают
+	photo_instance.delete()
+	# Файлы удаляем с защитой от отсутствующих на диске
+	for path in photo_paths:
+		try:
+			os.remove(path)
+		except OSError:
+			# файла уже нет на диске — это не ошибка, продолжаем
+			pass
 	return redirect(reverse("index"))
 

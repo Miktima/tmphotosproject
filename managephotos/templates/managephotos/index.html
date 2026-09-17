@@ -10,7 +10,13 @@
 		<td><img src="{{photo.src_min.url}}"></td><td>{{photo.title}}</td>
         <td>{{photo.star}}</td>
         <td><a class="btn btn-warning" href="{% url 'edit_photo' photo.id %}" role="button">EDIT</a></td>
-        <td><a class="btn btn-danger" href="{% url 'remove_photo' photo.id %}" role="button">REMOVE</a></td>
+        <td>
+            <form action="{% url 'remove_photo' photo.id %}" method="post" class="d-inline"
+                  onsubmit="return confirm('Delete this photo permanently?');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger" role="button">REMOVE</button>
+            </form>
+        </td>
         </tr>
 		{% endfor %}
         </table>

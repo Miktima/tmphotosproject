@@ -5,6 +5,11 @@
 <meta property="og:title" content="{{photo.title}}">
 <meta property="og:description" content="TIMA PHOTOS - Genre:{{genre_active|capfirst}} - Title:{{photo.title}}">
 <meta property="og:image" content="https://{{current_site}}{% url 'url_image' photo.url %}">
+{% if photo.img_width %}
+<meta property="og:image:width" content="{{photo.img_width}}">
+<meta property="og:image:height" content="{{photo.img_height}}">
+<meta property="og:image:type" content="image/jpeg">
+{% endif %}
 <meta property="og:url" content="https://{{current_site}}{{ request.path }}">
 <meta property="og:type" content="website">
 <meta property="twitter:card" content="{{photo.title}}">

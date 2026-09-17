@@ -360,6 +360,43 @@ class ManagephotosEditPhotoViewTests(TestCase):
         m = Photo.objects.filter(keywords__keyword = "black").count()
         self.assertEqual(m, 0)
 
+    def test_view_edit_keywords_go_to_edited_photo(self):
+        # Баг: edit_photo привязывал keywords к последней фотографии
+        # (Photo.objects.last()), а не к редактируемой. Создаём вторую
+        # фотографию, которая станет "последней", и проверяем, что keywords
+        # попадают на редактируемую (первую).
+        factory = RequestFactory()
+        f = open("test_files/DSC_0503.jpg", 'rb')
+        image = File(f)
+        f_tn = open("test_files/DSC_0503_tn.jpg", 'rb')
+        image_tn = File(f_tn)
+        # Вторая фотография — после self.test_photo она становится Photo.objects.last()
+        other_photo = Photo.objects.create(
+            src = image,
+            src_min = image_tn,
+            title = "Second photo",
+            star = 3,
+            place = "Place"
+        )
+        data = {
+            "src" : File(open("test_files/DSC_0503.jpg", 'rb')),
+            "src_min" : File(open("test_files/DSC_0503_tn.jpg", 'rb')),
+            "title": "The title in the edit view",
+            "star": 1,
+            "genre": Genre.objects.get(genre="Other").pk,
+            "keywords_bulk": "onlyhere"
+        }
+        request = factory.post(reverse('edit_photo',
+                                       kwargs={'photo_id': self.test_photo.pk}), data=data)
+        request.user = self.test_user
+        response = edit_photo(request, self.test_photo.pk)
+        response.client = self.client
+        self.assertRedirects(response, '/managephotos/', fetch_redirect_response=False)
+        # keywords должны быть на редактируемой (первой) фотографии
+        self.assertEqual(self.test_photo.keywords.filter(keyword="onlyhere").count(), 1)
+        # и НЕ на последней
+        self.assertEqual(other_photo.keywords.filter(keyword="onlyhere").count(), 0)
+
 class ManagephotosRemovePhotoViewTests(TestCase):
     
     @classmethod
@@ -399,31 +436,42 @@ class ManagephotosRemovePhotoViewTests(TestCase):
 
     def test_guest_redirect(self):
         # test redirect for unlogged user
-        response = self.client.get(reverse('remove_photo',
-                                   kwargs={'photo_id': self.test_photo.pk}))
+        response = self.client.post(reverse('remove_photo',
+                                    kwargs={'photo_id': self.test_photo.pk}))
         self.assertEqual(response.status_code, 302)
 
-    def test_login_get(self):
+    def test_get_405(self):
+        # REMOVE happens via POST only — GET must be rejected
+        login = self.client.login(username='testuser', password='1X!ISRUkw+tuK')
+        response = self.client.get(reverse('remove_photo',
+                                           kwargs={'photo_id': self.test_photo.pk}))
+        self.assertEqual(response.status_code, 405)
+        # и фото не удалено
+        self.assertTrue(Photo.objects.filter(pk=self.test_photo.pk).exists())
+
+    def test_login_post(self):
         # user login
         login = self.client.login(username='testuser', password='1X!ISRUkw+tuK')
         main_path = self.test_photo.src.path
-        min_path = self.test_photo.src.path
+        min_path = self.test_photo.src_min.path
         # Проверяем, что пути указывают на существующие файлы до удаления
         self.assertTrue(os.path.exists(main_path))
         self.assertTrue(os.path.exists(min_path))
-        response = self.client.get(reverse('remove_photo',
-                                           kwargs={'photo_id': self.test_photo.pk}))
+        response = self.client.post(reverse('remove_photo',
+                                            kwargs={'photo_id': self.test_photo.pk}))
         # test redirect
         self.assertRedirects(response, '/managephotos/')
         # Проверяем, что файлы удалены
         self.assertFalse(os.path.exists(main_path))
         self.assertFalse(os.path.exists(min_path))
+        # и запись удалена из БД
+        self.assertFalse(Photo.objects.filter(pk=self.test_photo.pk).exists())
 
-    def test_login_get_404(self):
+    def test_login_post_404(self):
         # user login
         login = self.client.login(username='testuser', password='1X!ISRUkw+tuK')
-        response = self.client.get(reverse('remove_photo',
-                                           kwargs={'photo_id': 999}))
+        response = self.client.post(reverse('remove_photo',
+                                            kwargs={'photo_id': 999}))
         # test status code
         self.assertEqual(response.status_code, 404)
 

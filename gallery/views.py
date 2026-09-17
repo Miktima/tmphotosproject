@@ -8,6 +8,8 @@ from django.contrib.sites.models import Site
 from django.shortcuts import redirect
 import random
 import math
+from django.utils.text import slugify
+from PIL import Image
 
 def home(request):
     # Select genres
@@ -60,6 +62,8 @@ def home(request):
         tmpDict["stars"] = starmask
         tmpDict["photoid"] = u
         tmpDict["keywords"] = photo_ch.keywords.all()
+        tmpDict["genre_url"] = slugify(photo_ch.genre.first().genre) if photo_ch.genre.exists() else ""
+        tmpDict["url_html"] = photo_ch.url.replace(".jpg", ".html")
         photoObj.append(tmpDict)
     current_site = Site.objects.get_current()
     context = {
@@ -78,7 +82,7 @@ def image_url(request, url_image):
     elif ".png" in url_image:
         content_type = "image/png"
     photo_instance = get_object_or_404(Photo, url=url_image)
-    return HttpResponse(photo_instance.src, content_type=content_type)
+    return HttpResponse(photo_instance.src.read(), content_type=content_type)
 
 def image_tmb_url(request, url_tmb):
     # Берем значение записи из таблицы photo 
@@ -89,7 +93,7 @@ def image_tmb_url(request, url_tmb):
     elif ".png" in url_tmb:
         content_type = "image/png"
     photo_instance = get_object_or_404(Photo, url_min=url_tmb)
-    return HttpResponse(photo_instance.src_min, content_type=content_type)
+    return HttpResponse(photo_instance.src_min.read(), content_type=content_type)
 
 def genre(request, genre):
     # Select genres
@@ -193,6 +197,15 @@ def genre_image(request, genre, image):
             (math.ceil(avgStars) - math.floor(avgStars)) * [0] + \
             (5 - math.ceil(avgStars)) * [-1]
     photoDict["stars"] = starmask
+    # Dimensions of the source image for og:image:width/height. Read from file
+    # so portrait/landscape variants report their real sizes.
+    try:
+        with Image.open(photo_instance.src.path) as im:
+            img_width, img_height = im.size
+    except Exception:
+        img_width, img_height = 0, 0
+    photoDict["img_width"] = img_width
+    photoDict["img_height"] = img_height
     current_site = Site.objects.get_current()
 
     context = {
@@ -229,6 +242,8 @@ def save_star(request):
             ip = x_forwarded_for.split(',')[-1].strip()
         else:
             ip = request.META.get('REMOTE_ADDR')      
+        if 'star' not in request.POST:
+            return HttpResponse("Bad request", status=400)
         phandst = (request.POST['star']).split("__")
         pubstar = Pubstars()
         pubstar.ipaddress = ip

@@ -58,7 +58,14 @@
         {% for photo in rnd_photo %}
         <div class="carousel-item {% if photo.active == 1 %}active{% endif %}">
             <figure class="figure">
-                <img src="{% url 'url_image' photo.url %}" class="img-fluid rounded figure-img" alt="{{photo.title}}"> 
+                {% if photo.genre_url %}
+                <a href="{% url 'genre_image' photo.genre_url photo.url_html %}">
+                {% endif %}
+                <img src="{% url 'url_image' photo.url %}" class="img-fluid rounded figure-img" alt="{{photo.title}}">
+                {% if photo.genre_url %}
+                </a>
+                {% endif %}
+
                 <blockquote class="blockquote">
                     <p class="text-secondary">
                         {% for star in photo.stars %}

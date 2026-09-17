@@ -117,8 +117,10 @@ class GalleryIndexViewTests(TestCase):
             link_genre = link_genre.replace(' ', '-')
             for p in photo_ins:
                 # test for every images and genres
-                response = self.client.get(reverse('genre_image', 
-                        kwargs={'genre': link_genre, 'image': p.url}))
+                # genre_image URL expects a .html link (genre view swaps .jpg -> .html)
+                image_html = (p.url).replace(".jpg", ".html")
+                response = self.client.get(reverse('genre_image',
+                        kwargs={'genre': link_genre, 'image': image_html}))
                 # test status code
                 self.assertEqual(response.status_code, 200)
         # test for 404 error
@@ -133,7 +135,8 @@ class GalleryIndexViewTests(TestCase):
         self.assertEqual(response.status_code, 404)
         # genre with image
         photo_rnd = Photo.objects.order_by('?').first()
-        url404i = reverse('genre_image', kwargs={'genre': link_genre, 'image': photo_rnd.url})
+        image_html = (photo_rnd.url).replace(".jpg", ".html")
+        url404i = reverse('genre_image', kwargs={'genre': link_genre, 'image': image_html})
         url404i = link_genre[:int(len(url404i)/2)] + link_genre[int(len(url404i)/2)+1:]
         response = self.client.get(url404i)
         self.assertEqual(response.status_code, 404)
@@ -168,7 +171,8 @@ class GalleryIndexViewTests(TestCase):
         link_genre = genre_ins.genre.lower()
         link_genre = link_genre.replace(' ', '-')
         # internal stars
-        url = reverse('genre_image', kwargs={'genre': link_genre, 'image': photo_rnd.url})
+        image_html = (photo_rnd.url).replace(".jpg", ".html")
+        url = reverse('genre_image', kwargs={'genre': link_genre, 'image': image_html})
         int_stars = photo_rnd.star
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
@@ -183,7 +187,8 @@ class GalleryIndexViewTests(TestCase):
             response = self.client.post('/save_star.html', {'star': payload})
             self.assertEqual(response.status_code, 200)
             # get image
-            url = reverse('genre_image', kwargs={'genre': link_genre, 'image': photo_rnd.url})
+            image_html = (photo_rnd.url).replace(".jpg", ".html")
+            url = reverse('genre_image', kwargs={'genre': link_genre, 'image': image_html})
             response = self.client.get(url)
             self.assertEqual(response.status_code, 200)           
             # check internal stars and public star
@@ -201,3 +206,10 @@ class GalleryIndexViewTests(TestCase):
             else:
                 self.assertEqual(n1, avgStars)
             self.assertGreater(n1+1, avgStars)
+
+    def test_save_star_without_value(self):
+        # POST без 'star' не должен давать 500
+        response = self.client.post('/save_star.html', {})
+        self.assertEqual(response.status_code, 400)
+        # и не должен создавать запись Pubstars
+        self.assertEqual(Pubstars.objects.count(), 0)
